@@ -1,0 +1,78 @@
+html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    padding-top: 50px;
+}
+
+.container-fluid, #map-row, #map-col {
+    height: 100%;
+}
+
+.media-object {
+    height: 80px;
+    width: 80px;
+}
+
+.media {
+    margin-top: 0;
+    padding: 8px 8px 0 8px;
+    border-bottom: solid 1px #dcdcdc;
+    cursor: pointer;
+}
+
+.media-active {
+    background-color: #f0f0f0;
+}
+
+table.borderless td, table.borderless th {
+    border: none !important;
+}
+
+#map {
+    height: 100%;
+}
+
+#map-col {
+    padding: 0;
+}
+
+#panel-1 {
+    height: 0;
+    overflow: auto;
+    background-color: #F8F8F8;;
+}
+
+#panel-side {
+    display: none;
+}
+
+#search-result {
+
+    height: 90%;
+    overflow: auto;
+}
+
+#close {
+    font-size: x-large;
+    cursor: pointer;
+}
+
+#sidebar {
+    height: 100%;
+    padding: 0;
+    padding-top: 10px;
+    background-color: #F8F8F8;
+}
+
+#res-reviews {
+
+    list-style: none;
+    padding: 0;
+    height: 45vh;
+    overflow: auto;
+}
+
