@@ -13,13 +13,18 @@ $html = file_get_html($url);
 
 //preg_match_all('/data-original="(.*?)fit=around%7C200%3A200&crop=200%3A200%3B%2A%2C%2A&output-format=webp"/s', $html, $matches);
 $array = [];
-$element = $html->find('script')[14];
+$element = $html->find('script')[15];
+
+
+//print_r($element);
 
 //$src = $element->plaintext; //getAttribute('data-original');
 //if (strpos($src, 'chains'))
 //  array_push($array, preg_split('/(\?)/',$src)[0]);
 
 $str = $element->innertext;
+
+
 
 //echo $str;
 

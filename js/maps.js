@@ -132,11 +132,14 @@ var generateListFromResponse = function (response) {
                 position: {
                     lat: +r.restaurant.location.latitude,
                     lng: +r.restaurant.location.longitude
-                }
+                },
+                photos_url: r.restaurant.photos_url,
+                menu_url: r.restaurant.menu_url
             });
 
-        restaurants = restaurants.reverse();
     }
+
+    restaurants = restaurants.reverse();
 
     if (restaurants.length == 0)
         return;
@@ -262,74 +265,123 @@ $('#close').click(function () {
 
 
 var openRestaurant = function (id) {
-    console.log(restaurants[id]);
+        console.log(restaurants[id]);
 
-    var res = restaurants[id];
+        var res = restaurants[id];
 
-    $('#' + selectedRestaurant).removeClass('media-active');
+        $('#' + selectedRestaurant).removeClass('media-active');
 
-    selectedRestaurant = id;
+        selectedRestaurant = id;
 
-    $('#' + id).addClass('media-active');
+        $('#' + id).addClass('media-active');
 
-    $('#map').animate({
-        height: '40%'
-    });
+        $('#map').animate({
+            height: '40%'
+        });
 
-    $('#panel-1').animate({
-        height: '60%'
-    }, function () {
-        google.maps.event.trigger(map, 'resize');
-        map.setZoom(18);
-        map.panTo(markers[id].getPosition());
-        google.maps.event.trigger(markers[id], 'mouseover');
-    });
+        $('#panel-1').animate({
+            height: '60%'
+        }, function () {
+            google.maps.event.trigger(map, 'resize');
+            map.setZoom(18);
+            map.panTo(markers[id].getPosition());
+            google.maps.event.trigger(markers[id], 'mouseover');
+        });
 
-    $.post(
-        '/add.php',
-        {
-            rest: JSON.stringify(restaurants[id])
-        },
-        function (data, success) {
+        $.post(
+            '/add.php',
+            {
+                rest: JSON.stringify(restaurants[id])
+            },
+            function (data, success) {
 
-            console.log(success);
-            console.log(data);
-        }
-    );
+                console.log(success);
+                console.log(data);
+            }
+        );
 
-    var reviews = [];
+        var reviews = [];
 
-    $.get('/rest.php?res-id=' + res.id, function (data) {
-        reviews = JSON.parse(data);
-        console.log(reviews);
+        $.get('/rest.php?res-id=' + res.id, function (data) {
+            reviews = JSON.parse(data);
+            console.log(reviews);
 
-        $('#res-reviews li').remove();
+            $('#res-reviews li').remove();
 
-        for (r of reviews) {
+            for (r of reviews) {
 
 
-            var string = `<li><blockquote>
+                var string = `<li><blockquote>
                                 <p>` + r.review.rating_text + `<span class="badge pull-right" style="background: #`
-                + r.review.rating_color + `">RATED ` + r.review.rating + `</span></p>
+                    + r.review.rating_color + `">RATED ` + r.review.rating + `</span></p>
                                 <footer>` + r.review.review_time_friendly + ` <cite>` + r.review.user.name + `</cite></footer>
                           </blockquote></li>`;
 
-            $('#res-reviews').append(string);
+                $('#res-reviews').append(string);
 
-        }
+            }
 
-    });
+        });
 
-    $('#phone-no-modal .modal-title').html(res.name);
-    $('#res-title').html(res.name);
-    $('#res-locality').html(res.locality);
-    $('#res-address').html(res.address);
-    $('#res-cuisines').html(res.cuisines);
-    $('#res-avg-cost').html(res.avgCost);
-    $('#res-rating').html(res.rating).css('background', res.fillColor);
-    $('#res-thumb').attr('src', res.thumb);
 
-};
+        $.get('getmenu.php?url=' + res.menu_url, function (data) {
+                data = JSON.parse(data);
+                console.log(data);
+
+                $('.carousel-indicators li').remove();
+                $('.carousel-inner .item').remove();
+
+                for (var i = 0; i < data.length; i++) {
+
+                    if (i == 0) {
+                        $('.carousel-indicators').append(`
+                            <li data-target="#carousel-example-generic" data-slide-to="` + i + `" class="active"></li>
+                        `);
+
+                        $('.carousel-inner').append(
+                            `
+                            <div class="item active" style="width: 100%">
+                                <img src="` + data[i].url + `?output-format=webp" style="height: 80vh" class="center-block img-responsive">        
+                            </div>  
+                            `
+                        );
+                    }
+                    else {
+
+                        $('.carousel-indicators').append(`
+                            <li data-target="#carousel-example-generic" data-slide-to="` + i + `"></li>
+                            `);
+
+
+                        $('.carousel-inner').append(
+                            `
+                            <div class="item">
+                                <img src="` + data[i].url + `?output-format=webp" style="height: 80vh" class="center-block img-responsive">        
+                            </div>  
+                            `
+                        );
+                    }
+
+
+                }
+
+            }
+        )
+        ;
+
+
+        $('#phone-no-modal .modal-title').html(res.name);
+        $('#view-menu .modal-title').html(res.name + ' Menu');
+        $('#res-title').html(res.name);
+        $('#res-locality').html(res.locality);
+        $('#res-address').html(res.address);
+        $('#res-cuisines').html(res.cuisines);
+        $('#res-avg-cost').html(res.avgCost);
+        $('#res-rating').html(res.rating).css('background', res.fillColor);
+        $('#res-thumb').attr('src', res.thumb);
+
+    }
+    ;
 
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;

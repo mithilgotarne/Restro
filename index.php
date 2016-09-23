@@ -6,7 +6,7 @@ $message = "";
 if (isset($_GET['logout'])) {
     session_destroy();
     $message = "You are successfully logged out. Have a nice day!";
-    session_start();
+    header('location:/');
 }
 ?>
 <!DOCTYPE html>
@@ -130,19 +130,30 @@ if (isset($_GET['logout'])) {
 <nav class="navbar navbar-default" style="min-height: 60px;">
     <div class="container">
         <div class="navbar-right">
-            <?php
-            if (isset($_SESSION['id'])) {
+            <?php if (isset($_SESSION['id'])) { ?>
+                <h4>
+                    <span style="font-family:\'Pacifico\', cursive;">Welcome, </span>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success dropdown-toggle"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="glyphicon glyphicon-user"></i> <?php echo explode(' ', $_SESSION["name"])[0] ?> <span
+                                class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li style=""><a href="#"><i class="glyphicon glyphicon-user"></i> My Profile</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li style=""><a href="?logout"><i class="glyphicon glyphicon-log-out"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                <h4>
 
-                echo '<h4><span style="font-family:\'Pacifico\', cursive;">Welcome</span>, ' . explode(' ', $_SESSION["name"])[0] . '!</h4>';
 
-            } else {
-                echo '<button id="login" class="btn btn-success navbar-btn" data-toggle="modal" data-target="#login-modal">Log In
+                    <?php } else { ?>
+                        <button id="login" class="btn btn-success navbar-btn" data-toggle="modal"
+                                data-target="#login-modal">Log In
                             <i class="glyphicon glyphicon-log-in"></i>
-                      </button>';
-            }
-
-
-            ?>
+                        </button>
+                    <?php } ?>
         </div>
     </div>
 </nav>
@@ -180,7 +191,7 @@ if (isset($_GET['logout'])) {
 
             <h3>Quick Searches</h3>
 
-            <a class="col-md-2" href="search.php?q=pocket friendly">
+            <a class="col-md-2" href="search.php?q=delivery">
 
                 <img src="icons/del.png" alt="Delivery">
                 <h4>Delivery</h4>
@@ -229,111 +240,116 @@ if (isset($_GET['logout'])) {
 
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog  modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
-                <h2><i class="glyphicon glyphicon-cutlery"></i> Restro</h2>
-            </div>
-            <div class="modal-body">
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs nav-justified" role="tablist">
-                    <li role="presentation" class="active"><a href="#login-tab" aria-controls="login-tab" role="tab"
-                                                              data-toggle="tab">Log In</a></li>
-                    <li role="presentation"><a href="#signup-tab" aria-controls="signup-tab" role="tab"
-                                               data-toggle="tab">Sign Up</a></li>
-                </ul>
+<?php
 
-                <!-- Tab panes -->
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane fade in active" id="login-tab">
+if (!isset($_SESSION['id'])) { ?>
+    <!-- Modal -->
+    <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog  modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h2><i class="glyphicon glyphicon-cutlery"></i> Restro</h2>
+                </div>
+                <div class="modal-body">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs nav-justified" role="tablist">
+                        <li role="presentation" class="active"><a href="#login-tab" aria-controls="login-tab" role="tab"
+                                                                  data-toggle="tab">Log In</a></li>
+                        <li role="presentation"><a href="#signup-tab" aria-controls="signup-tab" role="tab"
+                                                   data-toggle="tab">Sign Up</a></li>
+                    </ul>
 
-                        <form id="login-form" name="login-form" style="padding-top: 20px">
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="login-tab">
 
-                            <div class="input-group">
+                            <form id="login-form" name="login-form" style="padding-top: 20px">
 
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                                <input required name="email" type="email" class="form-control" placeholder="Email">
+                                <div class="input-group">
 
-                            </div>
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                                    <input required name="email" type="email" class="form-control" placeholder="Email">
 
-                            <br>
-
-                            <div class="input-group">
-
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                                <input required name="password" type="password" class="form-control"
-                                       placeholder="Password">
-
-                            </div>
-                            <br>
-                            <div class="clearfix">
-
-                                <div class="checkbox pull-left">
-                                    <label>
-                                        <input type="checkbox"> Remember me
-                                    </label>
                                 </div>
 
-                                <button type="submit" class="btn btn-success pull-right">Log In</button>
+                                <br>
 
-                            </div>
+                                <div class="input-group">
 
-                        </form>
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                    <input required name="password" type="password" class="form-control"
+                                           placeholder="Password">
 
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade" id="signup-tab">
+                                </div>
+                                <br>
+                                <div class="clearfix">
 
-                        <form id="signup-form" name="signup-form" style="padding-top: 20px">
+                                    <div class="checkbox pull-left">
+                                        <label>
+                                            <input type="checkbox"> Remember me
+                                        </label>
+                                    </div>
 
-                            <div id="form-group-name" class="input-group">
+                                    <button type="submit" class="btn btn-success pull-right">Log In</button>
 
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                <input required id="s-name" name="name" type="text" class="form-control"
-                                       placeholder="Full Name">
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="signup-tab">
+
+                            <form id="signup-form" name="signup-form" style="padding-top: 20px">
+
+                                <div id="form-group-name" class="input-group">
+
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <input required id="s-name" name="name" type="text" class="form-control"
+                                           placeholder="Full Name">
 
 
-                            </div>
-                            <br>
-                            <div class="input-group">
+                                </div>
+                                <br>
+                                <div class="input-group">
 
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                                <input required id="s-email" name="email" type="email" class="form-control"
-                                       placeholder="Email">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                                    <input required id="s-email" name="email" type="email" class="form-control"
+                                           placeholder="Email">
 
-                            </div>
-                            <br>
-                            <div class="input-group">
+                                </div>
+                                <br>
+                                <div class="input-group">
 
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                                <input required id="s-password" name="password" type="password" class="form-control"
-                                       placeholder="Password">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                    <input required id="s-password" name="password" type="password" class="form-control"
+                                           placeholder="Password">
 
-                            </div>
-                            <br>
-                            <div class="input-group" id="form-group-r-password">
+                                </div>
+                                <br>
+                                <div class="input-group" id="form-group-r-password">
 
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                                <input required id="r-password" name="r-password" type="password" class="form-control"
-                                       placeholder="Re-Enter Password">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                    <input required id="r-password" name="r-password" type="password"
+                                           class="form-control"
+                                           placeholder="Re-Enter Password">
 
-                            </div>
-                            <br>
-                            <button name="submit" type="submit" class="btn btn-success"
-                                    value="Sign Up!">Sign Up!
-                            </button>
+                                </div>
+                                <br>
+                                <button name="submit" type="submit" class="btn btn-success"
+                                        value="Sign Up!">Sign Up!
+                                </button>
 
-                        </form>
+                            </form>
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+<?php } ?>
 
 <script>
 
@@ -348,18 +364,18 @@ if (isset($_GET['logout'])) {
 
     $('#r-password').change(function () {
 
-        $('#form-group-r-password span').remove();
+        $('#signup-form .help-block').remove();
 
 
-        if ($(this).val() == $('#s-password').val())
-            $('#form-group-r-password')
-                .removeClass('has-error')
-                .addClass('has-success');
+        if ($(this).val() == $('#s-password').val()) {
+        }
+
         else
-            $('#form-group-r-password')
-                .removeClass('has-success')
-                .append('<span class="help-block text-left">Passwords are not matching.</span>')
-                .addClass('has-error');
+            $('#signup-tab')
+                .append(`<div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-top: 20px">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Oh Snap!</strong> Passwords are not matching. </div>`);
+
 
     });
 
