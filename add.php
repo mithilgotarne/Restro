@@ -13,13 +13,8 @@ $rest = $_POST['rest'];
 $restObj = json_decode($rest, true);
 
 $id = $restObj['id'];
-$thumb = $restObj['thumb'];
-$add = mysqli_real_escape_string($link, $restObj['address']);
-$lat = $restObj['position']['lat'];
-$lng = $restObj['position']['lng'];
-$rating = $restObj['rating'];
-$city = $restObj['city'];
-$name = mysqli_real_escape_string($link, $restObj['name']);
+
+$details = mysqli_real_escape_string($link, $rest);
 
 $results = 0;
 
@@ -31,8 +26,8 @@ if ($result = mysqli_query($link, $query)) {
 
 if ($results == 0) {
 
-    $query = "INSERT INTO restaurants (id, thumb, address, lat, lng, rating, city, name) 
-                      VALUES ('$id', '$thumb', '$add', $lat, $lng, '$rating', '$city' , '$name')";
+    $query = "INSERT INTO restaurants (id, details) 
+                      VALUES ('$id', '$details')";
 
     if ($result = mysqli_query($link, $query)) {
 

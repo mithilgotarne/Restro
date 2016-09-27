@@ -8,6 +8,34 @@ body {
     padding-top: 50px;
 }
 
+::-webkit-scrollbar {
+    width: 8px;
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+    width: 8px;
+    background-image: -webkit-linear-gradient(#F5F5F5, #8A8A8A);
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border: 1px solid black;
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-button {
+    background-color: #b3b3b3;
+}
+
+::-webkit-scrollbar-corner {
+    background-color: #b3b3b3;
+}
+
+.pacifico-font {
+    font-family: 'Pacifico', cursive;
+}
+
 .container-fluid, #map-row, #map-col {
     height: 100%;
 }
@@ -20,16 +48,26 @@ body {
 .media {
     margin-top: 0;
     padding: 8px 8px 0 8px;
-    border-bottom: solid 1px #dcdcdc;
+    //border-bottom: solid 1px #425662;
     cursor: pointer;
 }
 
 .media-active {
-    background-color: #f0f0f0;
+    //background-color: #425662;
 }
 
 table.borderless td, table.borderless th {
     border: none !important;
+}
+
+.navbar-inverse {
+    background-color: #1A237E;
+    border-bottom-color: #1A237E;
+}
+
+.navbar-inverse .navbar-brand {
+    font-family: 'Pacifico', cursive;
+    color: white;
 }
 
 #map {
@@ -43,7 +81,8 @@ table.borderless td, table.borderless th {
 #panel-1 {
     height: 0;
     overflow: auto;
-    background-color: #F8F8F8;;
+    background-color: #E8EAF6;
+    //color: #6A8DA7;
 }
 
 #panel-side {
@@ -65,7 +104,8 @@ table.borderless td, table.borderless th {
     height: 100%;
     padding: 0;
     padding-top: 10px;
-    background-color: #F8F8F8;
+    background-color: #E8EAF6;
+    //color: #6A8DA7;
 }
 
 #res-reviews {
@@ -76,3 +116,6 @@ table.borderless td, table.borderless th {
     overflow: auto;
 }
 
+#booking-date, #booking-time, #no-of-guests{
+    width: 100%;
+}

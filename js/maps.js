@@ -23,6 +23,16 @@ var initMap = function () {
                 stylers: [
                     {visibility: "off"}
                 ]
+            },
+            {
+                "stylers": [
+                    {
+                        "saturation": 100
+                    },
+                    {
+                        "gamma": 0.6
+                    }
+                ]
             }
         ]
     });
@@ -87,11 +97,12 @@ var searchByQuery = function (query) {
 
     if (query && query.length > 0)
         $.ajax({
-            url: '/rest.php?q=' + query + '&lat=' + currentPosition.lat + '&lng=' + currentPosition.lng,
+            url: '/rest.php?q=' + query.replace(new RegExp(' ', 'g'), '20%') + '&lat=' + currentPosition.lat + '&lng=' + currentPosition.lng,
             success: function (reponse) {
                 generateListFromResponse(reponse);
             }
         });
+
 };
 
 var generateListFromResponse = function (response) {
@@ -114,7 +125,7 @@ var generateListFromResponse = function (response) {
 
     for (var r of response) {
 
-        var thumb = !r.restaurant.thumb || r.restaurant.thumb == '' ? 'icons/restaurant-icon.png' : r.restaurant.thumb;
+        var thumb = !r.restaurant.thumb || r.restaurant.thumb == '' ? 'images/default.jpg' : r.restaurant.thumb;
 
         if (r.restaurant.location.latitude != 0 || r.restaurant.location.longitude != 0)
 
@@ -138,8 +149,6 @@ var generateListFromResponse = function (response) {
             });
 
     }
-
-    restaurants = restaurants.reverse();
 
     if (restaurants.length == 0)
         return;
@@ -220,8 +229,6 @@ var addRestaurantToDOM = function (i, restaurant) {
         <div class="media-body">
             <h4 class="media-heading">` + restaurant.name + `<span class="badge pull-right" style="background: ` + restaurant.fillColor + `">` + restaurant.rating + `</span></h4>
             <p>` + restaurant.address + `
-                <br>
-                ` + restaurant.city + `
             </p>
         </div>
     </li>`;
@@ -379,6 +386,15 @@ var openRestaurant = function (id) {
         $('#res-avg-cost').html(res.avgCost);
         $('#res-rating').html(res.rating).css('background', res.fillColor);
         $('#res-thumb').attr('src', res.thumb);
+
+        $('#book-table').click(function () {
+            location.href = 'restaurant.php?res_id=' + res.id;
+        });
+
+
+        $('#order-now').click(function () {
+            location.href = 'restaurant.php?res_id=' + res.id;
+        });
 
     }
     ;

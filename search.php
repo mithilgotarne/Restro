@@ -6,7 +6,7 @@ $message = "";
 if (isset($_GET['logout'])) {
     session_destroy();
     $message = "You are successfully logged out. Have a nice day!";
-    header('location:/');
+    header('location:search.php');
 }
 
 ?>
@@ -64,31 +64,32 @@ if (isset($_GET['logout'])) {
 
 <body>
 
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
 
         <div class="navbar-header">
-            <a class="navbar-brand" style="font-family: 'Pacifico', cursive;" href=""><i
+            <a class="navbar-brand pacifico-font" href="/"><i
                     class="glyphicon glyphicon-cutlery"></i> Restro</a>
         </div>
         <div class="navbar-right">
+            <a href="search.php?q=order+food" style="margin-right: 15px" class="btn btn-danger navbar-btn">Order Food</a>
+            <a href="search.php?q=book+table" style="margin-right: 15px" class="btn btn-info navbar-btn">Book Table</a>
+
             <?php if (isset($_SESSION['id'])) { ?>
 
-                <h4><span style="font-family:'Pacifico', cursive;">Welcome, </span>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-success dropdown-toggle"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="glyphicon glyphicon-user"></i> <?php echo explode(' ', $_SESSION["name"])[0] ?>
-                            <span
-                                class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li style=""><a href="#"><i class="glyphicon glyphicon-user"></i> My Profile</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li style=""><a href="?logout"><i class="glyphicon glyphicon-log-out"></i> Logout</a></li>
-                        </ul>
-                    </div>
-                </h4>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-success dropdown-toggle"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="glyphicon glyphicon-user"></i> <?php echo explode(' ', $_SESSION["name"])[0] ?>
+                        <span
+                            class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li style=""><a href="#"><i class="glyphicon glyphicon-user"></i> My Profile</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li style=""><a href="?logout"><i class="glyphicon glyphicon-log-out"></i> Logout</a></li>
+                    </ul>
+                </div>
 
 
             <?php } else { ?>
@@ -132,7 +133,7 @@ if (isset($_GET['logout'])) {
                 <div class="col-md-1" style="width: 4%"><i id="close" class="glyphicon glyphicon-remove"></i></div>
                 <div class="col-md-8">
 
-                    <div class="row" style="padding-bottom: 10px; border-bottom: solid 1px #dcdcdc">
+                    <div class="row" style="padding-bottom: 10px; border-bottom: solid 1px #6A8DA7">
 
                         <img id="res-thumb" src="icons/restaurant-icon.png" style="height: auto;" alt=""
                              class="col-md-3 img-rounded">
@@ -173,7 +174,7 @@ if (isset($_GET['logout'])) {
 
                     </table>
 
-                    <div class="row" style="padding-top: 10px; border-top: solid 1px #dcdcdc">
+                    <div class="row" style="padding-top: 10px; border-top: solid 1px #6A8DA7">
 
                         <div class="col-md-3">
                             <button style="width: 100%" class="btn btn-lg btn-primary" data-toggle="modal"
@@ -188,12 +189,12 @@ if (isset($_GET['logout'])) {
                             </button>
                         </div>
                         <div class="col-md-3">
-                            <button style="width: 100%" class="btn btn-lg btn-success"><i
+                            <button style="width: 100%" class="btn btn-lg btn-success" id="order-now"><i
                                     class="glyphicon glyphicon-shopping-cart"></i> Order Now
                             </button>
                         </div>
                         <div class="col-md-3">
-                            <button style="width: 100%" class="btn btn-lg btn-info"><i
+                            <button style="width: 100%" class="btn btn-lg btn-info" id="book-table"><i
                                     class="glyphicon glyphicon-calendar"></i> Book Table
                             </button>
                         </div>
@@ -204,7 +205,7 @@ if (isset($_GET['logout'])) {
                 <div class="col-md-3" style="width: 29.333%">
 
                     <h4 style="margin: 0">User Reviews</h4>
-                    <div class="row" style="padding-bottom: 10px; border-bottom: solid 1px #dcdcdc"></div>
+                    <div class="row" style="padding-bottom: 10px; border-bottom: solid 1px #6A8DA7"></div>
                     <ul id="res-reviews"></ul>
 
                 </div>
@@ -445,7 +446,6 @@ if (isset($_GET['logout'])) {
         });
 
     });
-
 
 </script>
 

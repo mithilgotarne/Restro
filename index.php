@@ -10,7 +10,7 @@ if (isset($_GET['logout'])) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -56,7 +56,6 @@ if (isset($_GET['logout'])) {
             background: rgba(0, 0, 0, 0.5);
             border: none;
             border-radius: 0;
-            padding-top: 10px;
         }
 
         .container-fluid {
@@ -78,12 +77,11 @@ if (isset($_GET['logout'])) {
             color: white;
             font-size: 7em;
             margin-top: 10vh;
-            margin-bottom: 50px;
             display: none;
 
         }
 
-        #search-input-group, #search-btn-group {
+        #search-btn-group {
 
             display: none;
 
@@ -105,7 +103,7 @@ if (isset($_GET['logout'])) {
             cursor: pointer;
             padding: 0;
             width: 15.3%;
-            margin: 15px 15px 15px 0;
+            margin: 15px 15px 0 0;
         }
 
         #quick-search .col-md-2:nth-child(2) {
@@ -131,20 +129,20 @@ if (isset($_GET['logout'])) {
     <div class="container">
         <div class="navbar-right">
             <?php if (isset($_SESSION['id'])) { ?>
-                <h4>
-                    <span style="font-family:\'Pacifico\', cursive;">Welcome, </span>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-success dropdown-toggle"
+            <h4>
+                <span style="font-family:\'Pacifico\', cursive;">Welcome, </span>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-success dropdown-toggle"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="glyphicon glyphicon-user"></i> <?php echo explode(' ', $_SESSION["name"])[0] ?> <span
-                                class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li style=""><a href="#"><i class="glyphicon glyphicon-user"></i> My Profile</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li style=""><a href="?logout"><i class="glyphicon glyphicon-log-out"></i> Logout</a></li>
-                        </ul>
-                    </div>
+                        <i class="glyphicon glyphicon-user"></i> <?php echo explode(' ', $_SESSION["name"])[0] ?> <span
+                            class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li style=""><a href="#"><i class="glyphicon glyphicon-user"></i> My Profile</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li style=""><a href="?logout"><i class="glyphicon glyphicon-log-out"></i> Logout</a></li>
+                    </ul>
+                </div>
                 <h4>
 
 
@@ -162,34 +160,43 @@ if (isset($_GET['logout'])) {
 
     <h1 id="heading"><a href=""><i class="glyphicon glyphicon-cutlery"></i> Restro</a></h1>
 
-    <form class="form-horizontal" action="search.php">
+    <form class="form-horizontal row" action="search.php">
 
-        <div class="form-group form-group-lg" id="search-input-group">
-            <div class="col-md-offset-3 col-md-6">
-                <input required type="text" class="form-control" style="width: 100%"
+        <div class="col-md-offset-3 col-md-6">
+
+            <div class="input-group input-group-lg" id="search-input-group">
+
+                <input required type="text" class="form-control"
                        placeholder="Search for restaurant, cuisine or a dish..."
-                       aria-describedby="search-icon" id="search-input" name="q"></div>
-        </div>
-
-        <div class="form-group form-group-lg" id="search-btn-group">
-
-            <button type="submit" class="btn btn-lg btn-primary">
-                <i class="glyphicon glyphicon-search" id="search-btn"></i> Search
-            </button>
-
-            <a class="btn btn-lg btn-danger" href="search.php">
-                <i class="glyphicon glyphicon-send" id="nearby-btn"></i> Nearby Restaurants
-            </a>
-
+                       aria-describedby="search-icon" id="search-input" name="q">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-lg btn-primary">
+                        <i class="glyphicon glyphicon-search" id="search-btn"></i> Search
+                    </button>
+                </span>
+            </div>
         </div>
 
     </form>
+
+    <br>
+
+    <div class="row" id="search-btn-group">
+
+
+            <a class="btn btn-lg btn-danger" href="search.php" >
+                <i class="glyphicon glyphicon-send" id="nearby-btn"></i> Nearby Restaurants
+            </a>
+
+
+
+    </div>
 
     <div class="row">
 
         <div class="container" id="quick-search">
 
-            <h3>Quick Searches</h3>
+            <h2>Quick Searches</h2>
 
             <a class="col-md-2" href="search.php?q=delivery">
 
@@ -355,7 +362,7 @@ if (!isset($_SESSION['id'])) { ?>
 
     $(document).ready(function () {
         $('#heading').fadeIn(2000);
-        $('#search-input-group').show("slide", {direction: "left"}, 500);
+        //$('#search-input-group').show("slide", {direction: "left"}, 500);
         $('#search-btn-group').show("slide", {direction: "right"}, 500);
         $('#quick-search .col-md-2').each(function (index) {
             $(this).fadeIn(500 * (index + 1));
