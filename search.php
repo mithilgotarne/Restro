@@ -72,7 +72,8 @@ if (isset($_GET['logout'])) {
                     class="glyphicon glyphicon-cutlery"></i> Restro</a>
         </div>
         <div class="navbar-right">
-            <a href="search.php?q=order+food" style="margin-right: 15px" class="btn btn-danger navbar-btn">Order Food</a>
+            <a href="search.php?q=order+food" style="margin-right: 15px" class="btn btn-danger navbar-btn">Order
+                Food</a>
             <a href="search.php?q=book+table" style="margin-right: 15px" class="btn btn-info navbar-btn">Book Table</a>
 
             <?php if (isset($_SESSION['id'])) { ?>
@@ -177,26 +178,25 @@ if (isset($_GET['logout'])) {
                     <div class="row" style="padding-top: 10px; border-top: solid 1px #6A8DA7">
 
                         <div class="col-md-3">
-                            <button style="width: 100%" class="btn btn-lg btn-primary" data-toggle="modal"
-                                    data-target="#phone-no-modal"><i
+                            <a style="width: 100%" class="btn btn-lg btn-primary" data-toggle="modal"
+                               data-target="#phone-no-modal"><i
                                     class="glyphicon glyphicon-earphone"></i> Call
-                            </button>
+                            </a>
                         </div>
                         <div class="col-md-3">
-                            <button style="width: 100%" class="btn btn-lg btn-warning" data-toggle="modal"
-                                    data-target="#view-menu"><i
+                            <a style="width: 100%" class="btn btn-lg btn-warning" id="view-menu"><i
                                     class="glyphicon glyphicon-list"></i> View Menu
-                            </button>
+                            </a>
                         </div>
                         <div class="col-md-3">
-                            <button style="width: 100%" class="btn btn-lg btn-success" id="order-now"><i
+                            <a style="width: 100%" class="btn btn-lg btn-success" id="order-now"><i
                                     class="glyphicon glyphicon-shopping-cart"></i> Order Now
-                            </button>
+                            </a>
                         </div>
                         <div class="col-md-3">
-                            <button style="width: 100%" class="btn btn-lg btn-info" id="book-table"><i
+                            <a style="width: 100%" class="btn btn-lg btn-info" id="book-table"><i
                                     class="glyphicon glyphicon-calendar"></i> Book Table
-                            </button>
+                            </a>
                         </div>
 
                     </div>
@@ -230,47 +230,6 @@ if (isset($_GET['logout'])) {
                         <br><br>
                         <span class="text-primary" style="padding-top: 8px">022 33126791</span></b>
                 </h4>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<div class="modal fade" id="view-menu">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title"></h4>
-            </div>
-            <div class="modal-body" style="padding: 0">
-
-                <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-                    <!-- Indicators -->
-                    <ol class="carousel-indicators">
-                        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                    </ol>
-
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner" role="listbox" style="background: black">
-                        <div class="item active">
-                            <img src="" alt="">
-                            <div class="carousel-caption">
-                                ...
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Controls -->
-                    <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
-                </div>
-
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

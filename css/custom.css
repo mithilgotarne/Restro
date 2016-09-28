@@ -6,6 +6,7 @@ html, body {
 
 body {
     padding-top: 50px;
+    position: relative;
 }
 
 ::-webkit-scrollbar {
@@ -48,12 +49,12 @@ body {
 .media {
     margin-top: 0;
     padding: 8px 8px 0 8px;
-    //border-bottom: solid 1px #425662;
+/ / border-bottom: solid 1 px #425662;
     cursor: pointer;
 }
 
 .media-active {
-    //background-color: #425662;
+/ / background-color: #425662;
 }
 
 table.borderless td, table.borderless th {
@@ -62,12 +63,26 @@ table.borderless td, table.borderless th {
 
 .navbar-inverse {
     background-color: #1A237E;
-    border-bottom-color: #1A237E;
+    border: none;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    color: white;
+}
+
+.navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:focus, .navbar-inverse .navbar-nav > .active > a:hover {
+    color: #fff;
+    background-color: #3F51B5;
 }
 
 .navbar-inverse .navbar-brand {
     font-family: 'Pacifico', cursive;
     color: white;
+}
+
+.carousel-control.left, .carousel-control.right {
+    background-image: none;
+    outline: none;
 }
 
 #map {
@@ -82,7 +97,7 @@ table.borderless td, table.borderless th {
     height: 0;
     overflow: auto;
     background-color: #E8EAF6;
-    //color: #6A8DA7;
+/ / color: #6A8DA7;
 }
 
 #panel-side {
@@ -105,7 +120,7 @@ table.borderless td, table.borderless th {
     padding: 0;
     padding-top: 10px;
     background-color: #E8EAF6;
-    //color: #6A8DA7;
+/ / color: #6A8DA7;
 }
 
 #res-reviews {
@@ -116,6 +131,6 @@ table.borderless td, table.borderless th {
     overflow: auto;
 }
 
-#booking-date, #booking-time, #no-of-guests{
+#booking-date, #booking-time, #no-of-guests {
     width: 100%;
 }

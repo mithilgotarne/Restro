@@ -29,6 +29,7 @@ session_start();
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <link rel="stylesheet" href="css/map-icons.min.css">
+    <link rel="stylesheet" href="css/rating.css">
     <!--Custom CSS-->
     <link rel="stylesheet" href="css/custom.css">
 
@@ -40,7 +41,7 @@ session_start();
     <![endif]-->
     <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
 </head>
-<body>
+<body data-spy="scroll" data-target=".navbar" data-offset="50" style="padding-top: 0">
 
 <?php if (isset($_GET['res_id']) && $_GET['res_id'] != '') {
 
@@ -54,6 +55,8 @@ session_start();
     if ($result = mysqli_query($link, $query)) {
 
         if ($row = mysqli_fetch_array($result)) {
+
+            $_SESSION['res_id'] = $id;
 
             $details = json_decode($row['details'], true);
 
@@ -87,11 +90,50 @@ session_start();
                         <a class="navbar-brand" href="/"><i class="glyphicon glyphicon-cutlery"></i> Restro</a>
                     </div>
 
+                    <div class="navbar-right">
+
+                        <ul class="nav navbar-nav" role="tablist">
+
+                            <li><a href="#overview">Overview</a></li>
+                            <li><a href="#viewmenu">View Menu</a></li>
+                            <li><a href="#booktable">Book Table</a></li>
+                            <li><a href="#reviews">Reviews</a></li>
+
+                        </ul>
+                    </div>
                 </div>
             </nav>
 
-            <div class="container-fluid"
-                 style="height: 60vh;
+            <script>
+
+                $('.nav a').on('click', function () {
+
+                    // Make sure this.hash has a value before overriding default behavior
+                    if (this.hash !== "") {
+
+                        // Prevent default anchor click behavior
+                        event.preventDefault();
+
+                        // Store hash (#)
+                        var hash = this.hash;
+
+                        // Using jQuery's animate() method to add smooth page scroll
+                        // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area (the speed of the animation)
+                        $('html, body').animate({
+                            scrollTop: $(hash).offset().top
+                        }, 800, function () {
+
+                            // Add hash (#) to URL when done scrolling (default click behavior)
+                            window.location.hash = hash;
+                        });
+                    }// End if statement
+
+                });
+
+            </script>
+
+            <div class="container-fluid" id="overview"
+                 style="height: calc(60vh + 50px);
                      background-image: url('<?php echo $pictures[array_rand($pictures)] ?>');
                      background-attachment: fixed;
                      background-position-y: -200px;
@@ -102,7 +144,7 @@ session_start();
                 <div class="row" style="background-color: rgba(0,0,0,0.6); height: 100%">
 
                     <h1 class="text-center pacifico-font"
-                        style="color: white; margin-top: 15vh; font-size: 4em;">
+                        style="color: white; margin-top: 18vh; font-size: 4em;">
                         <?php echo $details['name'] ?>
                         <br>
                         <small style="color: #dadada"><?php echo $details['locality'] ?></small>
@@ -112,49 +154,61 @@ session_start();
 
             </div>
 
-            <div class="container text-center">
+            <div class="container-fluid text-center">
 
-                <div class="row"><h2 class="pacifico-font">Overview</h2></div>
+                <div class="row" style="padding: 15px 60px 30px 0; background-color: #E8EAF6">
 
-                <div class="row">
+                    <div class="col-md-12">
 
-                    <div class="col-md-3">
+                        <h2 class="pacifico-font">Overview</h2>
 
-                        <h3>Phone Numbers</h3>
-                        <span class="text-success">
+                        <div class="col-md-3">
+
+                            <h3>Phone Numbers</h3>
+                            <span class="text-success">
                         <b style="font-size: large">022 61701331<br>022 61701332</b>
                     </span>
 
+                        </div>
+                        <div class="col-md-3">
+
+                            <h3>Cuisines</h3>
+                            <b style="font-size: larger">
+                                <?php foreach (explode(", ", $details['cuisines']) as $i => $cuisine) { ?>
+                                    <?php if ($i != 0) echo '/' ?> <a
+                                        href="search.php?q=<?php echo $cuisine ?>"><?php echo $cuisine ?></a>
+                                <?php } ?></b>
+
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <h3>Cost</h3>
+                            <p><span style="color: #b3b3b3">AVERAGE</span><br>₹<?php echo $details['avgCost'] ?> for two
+                                people
+                                (approx.)</p>
+
+                        </div>
+                        <div class="col-md-3">
+
+                            <h3>Address</h3>
+                            <address><?php echo $details['address'] ?>.</address>
+
+                        </div>
+
+
                     </div>
-                    <div class="col-md-3">
 
-                        <h3>Cuisines</h3>
-                        <b style="font-size: larger">
-                            <?php foreach (explode(", ", $details['cuisines']) as $i => $cuisine) { ?>
-                                <?php if ($i != 0) echo '/' ?> <a
-                                    href="search.php?q=<?php echo $cuisine ?>"><?php echo $cuisine ?></a>
-                            <?php } ?></b>
-
-
-                    </div>
-                    <div class="col-md-3">
-
-                        <h3>Cost</h3>
-                        <p><span style="color: #b3b3b3">AVERAGE</span><br>₹<?php echo $details['avgCost'] ?> for two
-                            people
-                            (approx.)</p>
-
-                    </div>
-                    <div class="col-md-3">
-
-                        <h3>Address</h3>
-                        <address><?php echo $details['address'] ?>.</address>
-
-                    </div>
 
                 </div>
 
-                <div class="row" style="min-height: calc(100vh - 50px)">
+                <div class="row" id="viewmenu" style="
+                    min-height: calc(100vh - 50px); color: white;
+                    background-image: url('images/menu-bg.jpg');
+                    background-attachment: fixed;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: cover;">
 
                     <?php
 
@@ -175,48 +229,61 @@ session_start();
                     //print_r($array);
                     ?>
 
-                    <div class="col-md-6">
+                    <div class="col-md-12"
+                         style="padding: 0; min-height: 100vh;  padding-top: 50px; background-color: rgba(0,0,0,0.5)">
 
-                        <h2 class="pacifico-font">Menu</h2>
 
-                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-                            <!-- Indicators -->
-                            <ol class="carousel-indicators">
-                                <?php foreach ($array as $i => $slide) { ?>
-                                    <li data-target="#carousel-example-generic" data-slide-to="<?php echo $i ?>"
-                                        class="<?php if ($i == 0) echo 'active' ?>"></li>
-                                <?php } ?>
-                            </ol>
+                        <div class="col-md-offset-2 col-md-8">
 
-                            <!-- Wrapper for slides -->
-                            <div class="carousel-inner" role="listbox">
-                                <?php foreach ($array as $i => $slide) { ?>
-                                    <div class="item <?php if ($i == 0) echo 'active' ?>">
-                                        <img class="center-block"
-                                             style="height: 80vh; width: auto"
-                                             src="<?php echo $slide['url'] ?>"
-                                             alt="<?php echo $details['name'] . 's Menu' ?>">
-                                    </div>
-                                <?php } ?>
+                            <h2 class="pacifico-font">Menu</h2>
+
+                            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                                <!-- Indicators -->
+                                <ol class="carousel-indicators">
+                                    <?php foreach ($array as $i => $slide) { ?>
+                                        <li data-target="#carousel-example-generic" data-slide-to="<?php echo $i ?>"
+                                            class="<?php if ($i == 0) echo 'active' ?>"></li>
+                                    <?php } ?>
+                                </ol>
+
+                                <!-- Wrapper for slides -->
+                                <div class="carousel-inner" role="listbox">
+                                    <?php foreach ($array as $i => $slide) { ?>
+                                        <div class="item <?php if ($i == 0) echo 'active' ?>">
+                                            <img class="center-block"
+                                                 style="height: 80vh; width: auto"
+                                                 src="<?php echo $slide['url'] ?>"
+                                                 alt="<?php echo $details['name'] . 's Menu' ?>">
+                                        </div>
+                                    <?php } ?>
+                                </div>
+
+                                <!-- Controls -->
+                                <a class="left carousel-control" href="#carousel-example-generic" role="button"
+                                   data-slide="prev">
+                                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="right carousel-control" href="#carousel-example-generic" role="button"
+                                   data-slide="next">
+                                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
                             </div>
 
-                            <!-- Controls -->
-                            <a class="left carousel-control" href="#carousel-example-generic" role="button"
-                               data-slide="prev">
-                                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="right carousel-control" href="#carousel-example-generic" role="button"
-                               data-slide="next">
-                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                            </a>
+
                         </div>
 
 
                     </div>
 
-                    <div class="col-md-6" style="padding-left: 30px; padding-right: 30px">
+
+                </div>
+
+                <div class="row" id="booktable"
+                     style="min-height: 100vh; padding-top: 50px; background-color: #C5CAE9">
+
+                    <div class="col-md-offset-3 col-md-6" style="padding-left: 30px; padding-right: 30px">
 
                         <h2 class="pacifico-font">Book Table</h2>
 
@@ -227,10 +294,10 @@ session_start();
                             <h4>1. Please select your booking details</h4>
 
                             <div class="form-group">
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <label for="booking-date">SELECT A DATE</label>
                                     <br>
-                                    <select required class="form-control" id="booking-date">
+                                    <select required name="booking-date" class="form-control" id="booking-date">
                                         <?php for ($i = 0; $i < 7; $i++) { ?>
                                             <option value="<?php echo date("Y-m-d", strtotime("+" . $i . " days")) ?>">
                                                 <?php
@@ -247,10 +314,10 @@ session_start();
 
                                     </select>
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="no-of-guests">GUESTS</label>
+                                <div class="col-md-4">
+                                    <label for="no-of-guests">NUMBER OF GUESTS</label>
                                     <br>
-                                    <select required class="form-control" id="no-of-guests">
+                                    <select required name="no-of-guests" class="form-control" id="no-of-guests">
                                         <?php for ($i = 1; $i <= 20; $i++) { ?>
                                             <option <?php if ($i == 2) echo 'selected' ?>value="<?php echo $i ?>">
                                                 <?php echo $i ?>
@@ -262,7 +329,7 @@ session_start();
 
                                     <label for="booking-time">Time</label>
                                     <br>
-                                    <select required class="form-control" id="booking-time">
+                                    <select required name="booking-time" class="form-control" id="booking-time">
                                         <?php
                                         if (date('H') < 10) {
 
@@ -335,7 +402,7 @@ session_start();
                                     <label for="guest-name">FULL NAME</label>
                                     <br>
                                     <input value="<?php if (isset($_SESSION['name'])) echo $_SESSION['name'] ?>"
-                                           required type="text" class="form-control" id="guest-name"
+                                           required type="text" class="form-control" id="guest-name" name="guest-name"
                                            placeholder="Enter your full name">
 
 
@@ -350,6 +417,7 @@ session_start();
                                     <br>
                                     <input value="<?php if (isset($_SESSION['name'])) echo $_SESSION['email'] ?>"
                                            required type="email" class="form-control" id="guest-email"
+                                           name="guest-email"
                                            placeholder="Enter email your address">
 
 
@@ -358,7 +426,7 @@ session_start();
 
                                     <label for="guest-phone">PHONE NUMBER</label>
                                     <br>
-                                    <input required type="tel" class="form-control" id="guest-phone"
+                                    <input required type="tel" class="form-control" id="guest-phone" name="guest-phone"
                                            placeholder="Enter your phone number">
 
 
@@ -370,7 +438,7 @@ session_start();
 
                                     <label for="requests">ADDITIONAL REQUESTS</label>
                                     <br>
-                                    <textarea class="form-control" rows="2" id="requests"
+                                    <textarea class="form-control" rows="2" id="requests" name="requests"
                                               placeholder="Let us know if any additional requests"></textarea>
 
 
@@ -391,23 +459,160 @@ session_start();
                             </button>
                         </form>
 
+                        <script type="text/javascript" src="js/progress-modal.js"></script>
+
                         <script>
 
                             $('#booking-form').on('submit', function (e) {
-                                e.preventDefault();
-                                $.post('')
 
+                                e.preventDefault();
+                                waitingDialog.show('Submitting your booking request');
+                                $.post('booktable.php', $('#booking-form').serialize(), function (data) {
+
+                                    if (data && data != '') {
+                                        waitingDialog.changeMessage(data);
+                                        setTimeout(function () {
+                                            waitingDialog.hide();
+                                            location.reload();
+                                        }, 2000);
+
+                                    }
+                                });
                             });
 
                         </script>
 
                     </div>
+                </div>
+
+
+                <div class="row" id="reviews" style="min-height: 100vh;  padding-top: 50px;">
+
+                    <div class="col-md-12">
+
+                        <h2 class="pacifico-font">Reviews</h2>
+
+                        <div class="col-md-offset-3 col-md-6 text-left well" style="padding-bottom: 0;">
+
+                            <form class="form-horizontal" id="review-form">
+
+                                <div class="form-group">
+
+                                    <div class="col-md-3 text-center">
+
+                                        <label>YOUR RATING</label><br>
+
+                                        <fieldset id="ratings" class="rating">
+
+                                            <input type="radio" id="star5" name="rating" value="5"/>
+                                            <label class="full" for="star5" title="Awesome - 5 stars"></label>
+
+                                            <input type="radio" id="star4half" name="rating" value="4.5"/>
+                                            <label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>
+
+                                            <input type="radio" id="star4" name="rating" value="4"/>
+                                            <label class="full" for="star4" title="Pretty good - 4 stars"></label>
+
+                                            <input type="radio" id="star3half" name="rating" value="3.5"/>
+                                            <label class="half" for="star3half" title="Meh - 3.5 stars"></label>
+
+                                            <input type="radio" id="star3" name="rating" value="3"/>
+                                            <label class="full" for="star3" title="Meh - 3 stars"></label>
+
+                                            <input type="radio" id="star2half" name="rating" value="2.5"/>
+                                            <label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label>
+
+                                            <input type="radio" id="star2" name="rating" value="2"/>
+                                            <label class="full" for="star2" title="Kinda bad - 2 stars"></label>
+
+                                            <input type="radio" id="star1half" name="rating" value="1.5"/>
+                                            <label class="half" for="star1half" title="Meh - 1.5 stars"></label>
+
+                                            <input type="radio" id="star1" name="rating" value="1"/>
+                                            <label class="full" for="star1" title="Sucks big time - 1 star"></label>
+
+                                            <input type="radio" id="starhalf" name="rating" value="0.5"/>
+                                            <label class="half" for="starhalf"
+                                                   title="Sucks big time - 0.5 stars"></label>
+
+                                        </fieldset>
+
+                                        <label>YOUR REACTION</label><br>
+                                        <label id="reaction">None</label>
+
+
+                                        <script>
+
+                                            var reaction = $('#reaction');
+
+                                            $('#review-form').on('reset', function () {
+                                                reaction.css("color", "#000").text('None');
+                                            });
+
+
+                                            $('.rating :radio').change(function () {
+
+                                                var rating = $('.rating :radio:checked').val();
+                                                if (rating == 5)
+                                                    reaction.css("color", "#3F7E00").text('Legendary');
+                                                else if (rating == 4.5)
+                                                    reaction.css("color", "#3F7E00").text('Loved It!');
+                                                else if (rating == 4)
+                                                    reaction.css("color", "#5BA886").text('Great!');
+                                                else if (rating == 3.5)
+                                                    reaction.css("color", "#9ACD32").text('Good Enough!');
+                                                else if (rating == 3)
+                                                    reaction.css("color", "#CDD614").text('Average');
+                                                else if (rating == 2.5)
+                                                    reaction.css("color", "#FFBA00").text('Well...');
+                                                else if (rating == 2)
+                                                    reaction.css("color", "#FF7800").text('Blah');
+                                                else
+                                                    reaction.css("color", "#CB202D").text('Avoid!');
+
+
+                                            });
+
+
+                                        </script>
+
+
+                                    </div>
+
+                                    <div class="col-md-9">
+
+                                        <textarea required name="review" id="review" rows="3" class="form-control"
+                                                  placeholder="Write your Review"></textarea>
+
+                                        <br>
+
+                                        <div class="pull-right">
+
+                                            <button type="reset" class="btn btn-danger"><i
+                                                    class="glyphicon glyphicon-remove"></i> Cancel
+                                            </button>
+                                            <button type="submit" class="btn btn-success"><i
+                                                    class="glyphicon glyphicon-ok"></i> Submit
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+                            </form>
+
+
+                        </div>
+
+                    </div>
+
 
                 </div>
-                <div class="row">
 
 
-                </div>
             </div>
 
 
