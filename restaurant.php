@@ -91,7 +91,6 @@ if (isset($_GET['logout'])) {
             ?>
 
 
-
             <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
                 <div class="container">
 
@@ -105,6 +104,7 @@ if (isset($_GET['logout'])) {
 
                             <li><a href="#overview">Overview</a></li>
                             <li><a href="#viewmenu">View Menu</a></li>
+                            <li><a href="#ordernow">Order Now</a></li>
                             <li><a href="#booktable">Book Table</a></li>
                             <li><a href="#reviews">Reviews</a></li>
 
@@ -320,6 +320,21 @@ if (isset($_GET['logout'])) {
 
                 </div>
 
+                <div class="row" id="ordernow"
+                     style="min-height: 100vh; padding-top: 50px;">
+
+                    <div class="col-md-offset-2 col-md-8">
+
+                        <h2 class="pacifico-font">Order Now</h2>
+
+                        
+
+
+
+                    </div>
+
+                </div>
+
                 <div class="row" id="booktable"
                      style="min-height: 100vh; padding-top: 50px; background-color: #C5CAE9">
 
@@ -455,7 +470,8 @@ if (isset($_GET['logout'])) {
 
                                     <label for="guest-email">EMAIL</label>
                                     <br>
-                                    <input value="<?php if (isset($_SESSION['name'])) echo $_SESSION['email'] ?>"
+                                    <input data-toggle="tooltip" title="Booking details will be sent to this email."
+                                           value="<?php if (isset($_SESSION['name'])) echo $_SESSION['email'] ?>"
                                            required type="email" class="form-control" id="guest-email"
                                            name="guest-email"
                                            placeholder="Enter email your address">
@@ -503,6 +519,8 @@ if (isset($_GET['logout'])) {
 
                         <script>
 
+                            $('#guest-email').tooltip({placement: 'top', trigger: 'focus'});
+
                             $('#booking-form').on('submit', function (e) {
 
                                 e.preventDefault();
@@ -514,7 +532,7 @@ if (isset($_GET['logout'])) {
                                         setTimeout(function () {
                                             $('#booking-form').trigger('reset');
                                             waitingDialog.hide();
-                                        },1500);
+                                        }, 1500);
                                     }
                                 });
                             });

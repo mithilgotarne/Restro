@@ -6,6 +6,7 @@
     <file url="file://$PROJECT_DIR$/addreview.php" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/admin.php" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/booktable.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/editmenu.php" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/respondbooking.php" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/restaurant.php" dialect="MySQL" />
   </component>
