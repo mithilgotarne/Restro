@@ -1,5 +1,11 @@
 <?php
 session_start();
+
+if (isset($_GET['logout'])) {
+    session_destroy();
+    $message = "You are successfully logged out. Have a nice day!";
+    header('location:index.php');
+}
 ?>
 
 <!DOCTYPE html>
@@ -26,7 +32,8 @@ session_start();
     <!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
 
     <link rel="stylesheet" href="css/map-icons.min.css">
     <link rel="stylesheet" href="css/rating.css">
@@ -83,6 +90,8 @@ session_start();
 
             ?>
 
+
+
             <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
                 <div class="container">
 
@@ -100,6 +109,35 @@ session_start();
                             <li><a href="#reviews">Reviews</a></li>
 
                         </ul>
+
+                        <?php if (isset($_SESSION['id'])) { ?>
+
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-success dropdown-toggle"
+                                        style="margin-top: 8px; margin-left: 10px"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="glyphicon glyphicon-user"></i> <?php echo explode(' ', $_SESSION["name"])[0] ?>
+                                    <span
+                                        class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li style=""><a href="#"><i class="glyphicon glyphicon-user"></i> My Profile</a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li style=""><a href="?logout"><i class="glyphicon glyphicon-log-out"></i>
+                                            Logout</a></li>
+                                </ul>
+                            </div>
+
+
+                        <?php } else { ?>
+                            <button style="margin-left: 10px"
+                                    id="login" class="btn btn-success navbar-btn" data-toggle="modal"
+                                    data-target="#login-modal">Log In
+                                <i class="glyphicon glyphicon-log-in"></i>
+                            </button>
+                        <?php } ?>
+
                     </div>
                 </div>
             </nav>
@@ -129,6 +167,8 @@ session_start();
                     }// End if statement
 
                 });
+
+                document.title = '<?php echo $details['name']?> | Restro'
 
             </script>
 
@@ -447,16 +487,16 @@ session_start();
 
                             <?php if (!isset($_SESSION['id'])) { ?>
                                 <div class="alert alert-info">
-                                    <button type="button" class="close" data-dismiss="alert"
-                                            aria-hidden="true">&times;</button>
                                     <strong>Please Log In to book your table.</strong>
                                 </div>
                             <?php } else echo '<br>';
                             ?>
 
-                            <button type="submit" <?php if (!isset($_SESSION['id'])) echo 'disabled' ?>
+                            <button style="margin-bottom: 20px"
+                                    type="submit" <?php if (!isset($_SESSION['id'])) echo 'disabled' ?>
                                     class="btn btn-info btn-lg">Send Booking Request
                             </button>
+
                         </form>
 
                         <script type="text/javascript" src="js/progress-modal.js"></script>
@@ -472,10 +512,9 @@ session_start();
                                     if (data && data != '') {
                                         waitingDialog.changeMessage(data);
                                         setTimeout(function () {
+                                            $('#booking-form').trigger('reset');
                                             waitingDialog.hide();
-                                            location.reload();
-                                        }, 2000);
-
+                                        },1500);
                                     }
                                 });
                             });
@@ -492,120 +531,241 @@ session_start();
 
                         <h2 class="pacifico-font">Reviews</h2>
 
-                        <div class="col-md-offset-3 col-md-6 text-left well" style="padding-bottom: 0;">
+                        <?php if (isset($_SESSION['id'])) { ?>
 
-                            <form class="form-horizontal" id="review-form">
+                            <div class="row">
 
-                                <div class="form-group">
+                                <div class="col-md-offset-3 col-md-6 text-left well" style="padding-bottom: 0;">
 
-                                    <div class="col-md-3 text-center">
+                                    <form class="form-horizontal" id="review-form">
 
-                                        <label>YOUR RATING</label><br>
+                                        <div class="form-group">
 
-                                        <fieldset id="ratings" class="rating">
+                                            <div class="col-md-3 text-center">
 
-                                            <input type="radio" id="star5" name="rating" value="5"/>
-                                            <label class="full" for="star5" title="Awesome - 5 stars"></label>
+                                                <label>YOUR RATING</label><br>
 
-                                            <input type="radio" id="star4half" name="rating" value="4.5"/>
-                                            <label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>
+                                                <fieldset id="ratings" class="rating">
 
-                                            <input type="radio" id="star4" name="rating" value="4"/>
-                                            <label class="full" for="star4" title="Pretty good - 4 stars"></label>
+                                                    <input type="radio" id="star5" name="rating" value="5"/>
+                                                    <label class="full" for="star5" title="Awesome - 5 stars"></label>
 
-                                            <input type="radio" id="star3half" name="rating" value="3.5"/>
-                                            <label class="half" for="star3half" title="Meh - 3.5 stars"></label>
+                                                    <input type="radio" id="star4half" name="rating" value="4.5"/>
+                                                    <label class="half" for="star4half"
+                                                           title="Pretty good - 4.5 stars"></label>
 
-                                            <input type="radio" id="star3" name="rating" value="3"/>
-                                            <label class="full" for="star3" title="Meh - 3 stars"></label>
+                                                    <input type="radio" id="star4" name="rating" value="4"/>
+                                                    <label class="full" for="star4"
+                                                           title="Pretty good - 4 stars"></label>
 
-                                            <input type="radio" id="star2half" name="rating" value="2.5"/>
-                                            <label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label>
+                                                    <input type="radio" id="star3half" name="rating" value="3.5"/>
+                                                    <label class="half" for="star3half" title="Meh - 3.5 stars"></label>
 
-                                            <input type="radio" id="star2" name="rating" value="2"/>
-                                            <label class="full" for="star2" title="Kinda bad - 2 stars"></label>
+                                                    <input type="radio" id="star3" name="rating" value="3"/>
+                                                    <label class="full" for="star3" title="Meh - 3 stars"></label>
 
-                                            <input type="radio" id="star1half" name="rating" value="1.5"/>
-                                            <label class="half" for="star1half" title="Meh - 1.5 stars"></label>
+                                                    <input type="radio" id="star2half" name="rating" value="2.5"/>
+                                                    <label class="half" for="star2half"
+                                                           title="Kinda bad - 2.5 stars"></label>
 
-                                            <input type="radio" id="star1" name="rating" value="1"/>
-                                            <label class="full" for="star1" title="Sucks big time - 1 star"></label>
+                                                    <input type="radio" id="star2" name="rating" value="2"/>
+                                                    <label class="full" for="star2" title="Kinda bad - 2 stars"></label>
 
-                                            <input type="radio" id="starhalf" name="rating" value="0.5"/>
-                                            <label class="half" for="starhalf"
-                                                   title="Sucks big time - 0.5 stars"></label>
+                                                    <input type="radio" id="star1half" name="rating" value="1.5"/>
+                                                    <label class="half" for="star1half" title="Meh - 1.5 stars"></label>
 
-                                        </fieldset>
+                                                    <input type="radio" id="star1" name="rating" value="1"/>
+                                                    <label class="full" for="star1"
+                                                           title="Sucks big time - 1 star"></label>
 
-                                        <label>YOUR REACTION</label><br>
-                                        <label id="reaction">None</label>
+                                                    <input type="radio" id="starhalf" name="rating" value="0.5"/>
+                                                    <label class="half" for="starhalf"
+                                                           title="Sucks big time - 0.5 stars"></label>
 
+                                                </fieldset>
 
-                                        <script>
-
-                                            var reaction = $('#reaction');
-
-                                            $('#review-form').on('reset', function () {
-                                                reaction.css("color", "#000").text('None');
-                                            });
-
-
-                                            $('.rating :radio').change(function () {
-
-                                                var rating = $('.rating :radio:checked').val();
-                                                if (rating == 5)
-                                                    reaction.css("color", "#3F7E00").text('Legendary');
-                                                else if (rating == 4.5)
-                                                    reaction.css("color", "#3F7E00").text('Loved It!');
-                                                else if (rating == 4)
-                                                    reaction.css("color", "#5BA886").text('Great!');
-                                                else if (rating == 3.5)
-                                                    reaction.css("color", "#9ACD32").text('Good Enough!');
-                                                else if (rating == 3)
-                                                    reaction.css("color", "#CDD614").text('Average');
-                                                else if (rating == 2.5)
-                                                    reaction.css("color", "#FFBA00").text('Well...');
-                                                else if (rating == 2)
-                                                    reaction.css("color", "#FF7800").text('Blah');
-                                                else
-                                                    reaction.css("color", "#CB202D").text('Avoid!');
+                                                <label>YOUR REACTION</label><br>
+                                                <label id="reaction">None</label>
 
 
-                                            });
+                                                <script>
+
+                                                    var reaction = $('#reaction');
+
+                                                    $('#review-form').on('reset', function () {
+                                                        reaction.css("color", "#000").text('None');
+                                                    });
 
 
-                                        </script>
+                                                    $('.rating :radio').change(function () {
+
+                                                        var rating = $('.rating :radio:checked').val();
+                                                        if (rating == 5)
+                                                            reaction.css("color", "#3F7E00").text('Legendary');
+                                                        else if (rating == 4.5)
+                                                            reaction.css("color", "#3F7E00").text('Loved It!');
+                                                        else if (rating == 4)
+                                                            reaction.css("color", "#5BA886").text('Great!');
+                                                        else if (rating == 3.5)
+                                                            reaction.css("color", "#9ACD32").text('Good Enough!');
+                                                        else if (rating == 3)
+                                                            reaction.css("color", "#CDD614").text('Average');
+                                                        else if (rating == 2.5)
+                                                            reaction.css("color", "#FFBA00").text('Well...');
+                                                        else if (rating == 2)
+                                                            reaction.css("color", "#FF7800").text('Blah');
+                                                        else
+                                                            reaction.css("color", "#CB202D").text('Avoid!');
 
 
-                                    </div>
+                                                    });
 
-                                    <div class="col-md-9">
+
+                                                </script>
+
+
+                                            </div>
+
+                                            <div class="col-md-9">
 
                                         <textarea required name="review" id="review" rows="3" class="form-control"
-                                                  placeholder="Write your Review"></textarea>
+                                                  placeholder="Write Your Review Here"></textarea>
 
-                                        <br>
+                                                <br>
 
-                                        <div class="pull-right">
+                                                <div class="pull-right">
 
-                                            <button type="reset" class="btn btn-danger"><i
-                                                    class="glyphicon glyphicon-remove"></i> Cancel
-                                            </button>
-                                            <button type="submit" class="btn btn-success"><i
-                                                    class="glyphicon glyphicon-ok"></i> Submit
-                                            </button>
+                                                    <button type="reset" class="btn btn-danger"><i
+                                                            class="glyphicon glyphicon-remove"></i> Cancel
+                                                    </button>
+                                                    <button type="submit" class="btn btn-success"><i
+                                                            class="glyphicon glyphicon-ok"></i> Submit
+                                                    </button>
+
+                                                </div>
+
+
+                                            </div>
+
 
                                         </div>
 
-                                    </div>
+                                        <script>
 
+                                            $('#review-form').on('submit', function (e) {
+                                                e.preventDefault();
+                                                $.post('addreview.php', $('#review-form').serialize(), function (data) {
+                                                    console.log(data);
+                                                    location.reload();
+                                                });
+                                            });
+
+                                        </script>
+
+                                    </form>
 
                                 </div>
 
-                            </form>
+                            </div>
+
+                        <?php } ?>
+
+                        <div class="row">
+
+                            <ul class="col-md-offset-3 col-md-6" style="list-style: none; padding: 0">
+
+                                <?php
+
+                                include('conn.php');
+                                $id = mysqli_real_escape_string($link, $_GET['res_id']);
+
+                                $reactions = array("5.0" => "Legendary",
+                                    "4.5" => "Loved It!",
+                                    "4.0" => "Great",
+                                    "3.5" => "Good Enough!",
+                                    "3.0" => "Average",
+                                    "2.5" => "Well..",
+                                    "2.0" => "Blah",
+                                    "1.5" => "Avoid!",
+                                    "1.0" => "Avoid",
+                                    "0.5" => "Avoid"
+                                );
+
+                                $colors = array("5.0" => "#3F7E00",
+                                    "4.5" => "#3F7E00",
+                                    "4.0" => "#5BA886",
+                                    "3.5" => "#9ACD32",
+                                    "3.0" => "#CDD614",
+                                    "2.5" => "#FFBA00",
+                                    "2.0" => "#FF7800",
+                                    "1.5" => "#CB202D",
+                                    "1.0" => "#CB202D",
+                                    "0.5" => "#CB202D"
+                                );
+
+
+                                $query = "SELECT * FROM reviews WHERE res_id = '$id' ORDER BY r_date DESC";
+
+                                if ($result = mysqli_query($link, $query)) {
+
+                                    while ($row = mysqli_fetch_assoc($result)) {
+
+                                        $date = new DateTime($row['r_date']);
+                                        $now = new DateTime();
+
+                                        $interval = $date->diff($now);
+                                        $rating = $row['rating'] . '';
+
+                                        $ago_string = "";
+
+                                        if ($interval->d == 0) {
+
+                                            if ($interval->h == 0) {
+
+                                                $ago_string = $interval->i . " minutes ago";
+                                            } else
+                                                $ago_string = $interval->h . " hours ago";
+
+                                        } else {
+
+                                            $ago_string = $interval->d . " days ago";
+
+                                        }
+
+                                        ?>
+
+                                        <li class="text-left col-md-6" style="padding-bottom: 0">
+                                            <blockquote class="well">
+                                                <p><?php echo $row['review'] ?>
+                                                    <span
+                                                        style="background-color: <?php echo $colors[$rating] ?>"
+                                                        class="badge pull-right">
+                                                        <?php echo 'Rated ' . $row['rating']; ?></span>
+                                                </p>
+                                                <footer><?php echo $ago_string ?>
+                                                    <cite>
+                                                        <?php
+                                                        if (isset($_SESSION['name']) && ($row['u_name'] == $_SESSION['name']))
+                                                            echo 'You';
+                                                        else echo $row['u_name'];
+                                                        ?>
+                                                    </cite>
+                                                    <span
+                                                        class="pull-right"><b><?php echo $reactions[$rating] ?></b></span>
+                                                </footer>
+                                            </blockquote>
+                                        </li>
+
+                                    <?php }
+                                }
+                                ?>
+
+
+                            </ul>
 
 
                         </div>
+
 
                     </div>
 
@@ -616,11 +776,122 @@ session_start();
             </div>
 
 
-        <?php }
-    }
+        <?php } else header('Location:search.php');
+    } else header('Location:search.php');
 } else {
     header('Location:search.php');
 }
 ?>
+<?php if (!isset($_SESSION['id'])) { ?>
+    <!-- Modal -->
+    <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog  modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h2><i class="glyphicon glyphicon-cutlery"></i> Restro</h2>
+                </div>
+                <div class="modal-body">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs nav-justified" role="tablist">
+                        <li role="presentation" class="active"><a href="#login-tab" aria-controls="login-tab" role="tab"
+                                                                  data-toggle="tab">Log In</a></li>
+                        <li role="presentation"><a href="#signup-tab" aria-controls="signup-tab" role="tab"
+                                                   data-toggle="tab">Sign Up</a></li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="login-tab">
+
+                            <form id="login-form" name="login-form" style="padding-top: 20px">
+
+                                <div class="input-group">
+
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                                    <input required name="email" type="email" class="form-control" placeholder="Email">
+
+                                </div>
+
+                                <br>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                    <input required name="password" type="password" class="form-control"
+                                           placeholder="Password">
+
+                                </div>
+                                <br>
+                                <div class="clearfix">
+
+                                    <div class="checkbox pull-left">
+                                        <label>
+                                            <input type="checkbox"> Remember me
+                                        </label>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-success pull-right">Log In</button>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="signup-tab">
+
+                            <form id="signup-form" name="signup-form" style="padding-top: 20px">
+
+                                <div id="form-group-name" class="input-group">
+
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <input required id="s-name" name="name" type="text" class="form-control"
+                                           placeholder="Full Name">
+
+
+                                </div>
+                                <br>
+                                <div class="input-group">
+
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                                    <input required id="s-email" name="email" type="email" class="form-control"
+                                           placeholder="Email">
+
+                                </div>
+                                <br>
+                                <div class="input-group">
+
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                    <input required id="s-password" name="password" type="password" class="form-control"
+                                           placeholder="Password">
+
+                                </div>
+                                <br>
+                                <div class="input-group" id="form-group-r-password">
+
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                    <input required id="r-password" name="r-password" type="password"
+                                           class="form-control"
+                                           placeholder="Re-Enter Password">
+
+                                </div>
+                                <br>
+                                <button name="submit" type="submit" class="btn btn-success"
+                                        value="Sign Up!">Sign Up!
+                                </button>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<?php } ?>
+
+<script src="js/sign.js"></script>
 </body>
 </html>

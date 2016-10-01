@@ -184,10 +184,9 @@ if (isset($_GET['logout'])) {
     <div class="row" id="search-btn-group">
 
 
-            <a class="btn btn-lg btn-danger" href="search.php" >
-                <i class="glyphicon glyphicon-send" id="nearby-btn"></i> Nearby Restaurants
-            </a>
-
+        <a class="btn btn-lg btn-danger" href="search.php">
+            <i class="glyphicon glyphicon-send" id="nearby-btn"></i> Nearby Restaurants
+        </a>
 
 
     </div>
@@ -369,67 +368,9 @@ if (!isset($_SESSION['id'])) { ?>
         });
     });
 
-    $('#r-password').change(function () {
-
-        $('#signup-form .help-block').remove();
-
-
-        if ($(this).val() == $('#s-password').val()) {
-        }
-
-        else
-            $('#signup-tab')
-                .append(`<div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-top: 20px">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <strong>Oh Snap!</strong> Passwords are not matching. </div>`);
-
-
-    });
-
-    $('#login-form').on('submit', function (event) {
-
-        event.preventDefault();
-        $.post('login.php', $('#login-form').serialize(), function (data) {
-
-            $('#login-tab .alert').remove();
-
-            if (data == '') {
-
-                location.href = '';
-
-            }
-
-            else {
-
-                var string = `<div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-top: 20px">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <strong>Oh Snap!</strong> ` + data + `</div>`;
-
-                $('#login-tab').append(string);
-
-            }
-        });
-
-    });
-
-    $('#signup-form').on('submit', function (event) {
-
-        event.preventDefault();
-        $.post('signup.php', $('#signup-form').serialize(), function (data) {
-
-            $('#signup-tab .alert').remove();
-
-            var string = `<div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-top: 20px">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <strong>Oh Snap!</strong> ` + data + `</div>`;
-
-            $('#signup-tab').append(string);
-        });
-
-    });
-
-
 </script>
+
+<script type="text/javascript" src="js/sign.js"></script>
 
 </body>
 </html>

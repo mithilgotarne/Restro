@@ -26,13 +26,36 @@ else {
 				VALUES ('$email', '$password', '$name')";
 
     if (mysqli_query($link, $query)) {
-        $_SESSION['id'] = mysqli_insert_id($link);
-        //header("Location:search.php");
+
+        include('sendmail.php');
+
+        $body = "
+            
+            <h3>Welcome to Restro!</h3>
+            <p>
+                Hi, " . $name . "<br><br>
+                Welcome to Restro! Thanks so much for joining us. We're so happy you're here.<br>
+                Restro helps you to find your favourite food and deliver it to you.<br> 
+                We have about 1000 of the best restaurants in Mumbai for you to choose from.<br><br>
+                Please confirm your email and activate your account.<br><br>
+                <a href='http://localhost:8000/activate.php?id=" . $email . "&key=" . $password . "'>Click Here to Activate</a><br><br>
+                Cheers!<br>
+                Restro Team. 
+            </p>
+        ";
+
+        send_mail($email, 'Welcome to Restro', $body);
+
+        echo '<div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-top: 20px">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                Check your email to activate your account.</div>';
+
     } else {
-        $error .= "Error in creating user.<br />";
+        echo '<div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-top: 20px">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                Enable to create your account.</div>';
     }
 
 }
 
-echo $error;
 ?>

@@ -16,9 +16,15 @@ $query = "SELECT * FROM users WHERE email = '$email' AND password = '$password' 
 
 if ($result = mysqli_query($link, $query)) {
     if ($row = mysqli_fetch_array($result)) {
-        $_SESSION['id'] = $row['id']; // Creating session id
-        $_SESSION['name'] = $row['name'];
-        $_SESSION['email'] = $row['email'];
+        if ($row['activated'] == 1) {
+            $_SESSION['id'] = $row['id']; // Creating session id
+            $_SESSION['name'] = $row['name'];
+            $_SESSION['email'] = $row['email'];
+            $_SESSION['type'] = $row['type'];
+        } else echo '<div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-top: 20px">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                Check your email to activate your account.</div>';
+
     } else {
         $error .= "User does not exists with that combination of email and password.<br />";
     }
@@ -26,6 +32,8 @@ if ($result = mysqli_query($link, $query)) {
     $error .= "User does not exists with that combination of email and password.<br />";
 }
 
-if($error != "")
-    echo $error;
+if ($error != "")
+    echo '<div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-top: 20px">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                ' . $error . '</div>';
 ?>
