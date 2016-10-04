@@ -139,6 +139,13 @@ if (isset($_GET['logout'])) {
                     </button>
                     <ul class="dropdown-menu">
                         <li style=""><a href="#"><i class="glyphicon glyphicon-user"></i> My Profile</a></li>
+                        <?php if(isset($_SESSION['rest'])) { ?>
+                            <li>
+                                <a href="admin.php?res_id=<?php echo $_SESSION['rest']?>">
+                                    <i class="glyphicon glyphicon-cutlery"></i> My Restaurant
+                                </a>
+                            </li>
+                        <?php } ?>
                         <li role="separator" class="divider"></li>
                         <li style=""><a href="?logout"><i class="glyphicon glyphicon-log-out"></i> Logout</a></li>
                     </ul>

@@ -95,7 +95,9 @@ if (isset($_GET['logout'])) {
                 <div class="container">
 
                     <div class="navbar-header">
-                        <a class="navbar-brand" href="/"><i class="glyphicon glyphicon-cutlery"></i> Restro</a>
+                        <a class="navbar-brand" href="/">
+                            <i class="glyphicon glyphicon-cutlery"></i> Restro
+                        </a>
                     </div>
 
                     <div class="navbar-right">
@@ -121,10 +123,18 @@ if (isset($_GET['logout'])) {
                                         class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li style=""><a href="#"><i class="glyphicon glyphicon-user"></i> My Profile</a>
+                                    <li>
+                                        <a href="#"><i class="glyphicon glyphicon-user"></i> My Profile</a>
                                     </li>
+                                    <?php if (isset($_SESSION['rest'])) { ?>
+                                        <li>
+                                            <a href="admin.php?res_id=<?php echo $_SESSION['rest'] ?>">
+                                                <i class="glyphicon glyphicon-cutlery"></i> My Restaurant
+                                            </a>
+                                        </li>
+                                    <?php } ?>
                                     <li role="separator" class="divider"></li>
-                                    <li style=""><a href="?logout"><i class="glyphicon glyphicon-log-out"></i>
+                                    <li><a href="?logout"><i class="glyphicon glyphicon-log-out"></i>
                                             Logout</a></li>
                                 </ul>
                             </div>
@@ -323,12 +333,213 @@ if (isset($_GET['logout'])) {
                 <div class="row" id="ordernow"
                      style="min-height: 100vh; padding-top: 50px;">
 
-                    <div class="col-md-offset-2 col-md-8">
+                    <div class="col-md-12">
 
                         <h2 class="pacifico-font">Order Now</h2>
 
-                        
+                        <form class="form-horizontal text-left">
+                            <div class="row" style="height: 100%;">
 
+                                <div class="col-md-4">
+
+                                    <div class="col-md-12 well">
+
+                                        <h3 class="text-center">1. Select Items</h3>
+
+                                        <div class="form-group" style="margin: 0; margin-top: 15px;">
+
+                                            <label for="item-cat">SELECT A CATEGORY</label>
+                                            <br>
+                                            <select required name="item-cat" class="form-control"
+                                                    id="item-cat"></select>
+
+                                        </div>
+
+                                        <div class="form-group" style="margin-top: 15px;">
+
+                                            <div class="col-md-9">
+                                                <label for="item">SELECT AN ITEM</label>
+                                                <br>
+                                                <select required name="item" class="form-control" id="item"></select>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label for="quantity">QUANTITY</label>
+                                                <br>
+                                                <input required type="number" min="1" max="12" step="1" name="quantity"
+                                                       value="1"
+                                                       class="form-control" id="quantity">
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-group" style="margin: 0; margin-top: 15px;">
+
+
+                                            <button class="pull-right btn btn-danger" id="add-item">
+                                                <i class="glyphicon glyphicon-plus"></i> Add Item
+                                            </button>
+
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-4">
+
+                                    <div class="col-md-12 well" id="cart-main">
+
+                                        <h3 class="text-center">2. Confirm Cart</h3>
+                                        <div id="cart">
+
+
+
+                                        </div>
+
+                                        <button class="btn btn-success pull-right" id="confirm-cart">
+                                            <i class="glyphicon glyphicon-thumbs-up"></i> Confirm
+                                        </button>
+
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-4">
+
+                                    <div class="col-md-12 well">
+
+                                        <h3 class="text-center">3. Enter delivery details</h3>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+
+                        <script>
+
+                            var items = [];
+                            var order = {
+                                items: []
+                            };
+
+                            $.get('getmenu.php?res_id=<?php echo $_GET['res_id'] ?>', function (data) {
+
+                                data = JSON.parse(data);
+
+                                items = groupBy(data);
+
+                                console.log(items);
+
+                                var item_cat = $('#item-cat');
+
+                                for (var i = 0; i < items.length; i++) {
+                                    item_cat.append('<option value="' + i + '">' + items[i].category + '</option>');
+                                }
+
+                                setItemsOptions(0);
+
+                                item_cat.change(function () {
+
+                                    $('#item option').remove();
+
+                                    setItemsOptions($(this).val());
+
+                                });
+
+                            });
+
+                            function setItemsOptions(index) {
+
+                                var cat = items[index];
+
+                                for (var i = 0; i < cat.items.length; i++) {
+                                    $('#item')
+                                        .append('<option value="' + i + '">'
+                                            + cat.items[i].name + ' (₹' + cat.items[i].rate + ')</option>')
+                                }
+
+                            }
+
+                            $('#add-item').click(function (e) {
+
+                                e.preventDefault();
+
+                                var cat = $('#item-cat').val();
+                                var item = $('#item').val();
+                                var quantity = $('#quantity').val();
+                                var itemObject = items[cat].items[item];
+
+                                order['items'].push({item: itemObject, quantity: +quantity});
+
+                                $('#cart').append(`
+
+                                        <div class="row" id="cart-item-` + (order.items.length - 1) + `">
+                                            <div class="col-md-12"><b>` + itemObject.name + `</b></div>
+                                        </div>
+                                        <div class="row text-center" id="cart-` + (order.items.length - 1) + `">
+                                            <div class="col-md-2">` + (+quantity) + `</div>
+                                            <div class="col-md-2"> X </div>
+                                            <div class="col-md-2">` + itemObject.rate + `</div>
+                                            <div class="col-md-2"> = </div>
+                                            <div class="col-md-2">` + (+quantity * itemObject.rate).toFixed(2) + `</div>
+                                            <div class="col-md-2">
+                                                <button class="delete-cart-item"
+                                                    id="` + (order.items.length - 1) + `">
+                                                    <i class="glyphicon glyphicon-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                `);
+
+                                if(order.items.length == 0)
+                                    $('#confirm-cart').hide();
+                                else
+                                    $('#confirm-cart').show();
+
+                                $('.delete-cart-item').click(function (e) {
+
+                                    e.preventDefault();
+                                    var id = $(this).attr("id");
+
+                                    $('#cart-item-' + id).remove();
+                                    $('#cart-' + id).remove();
+
+                                    order.items[+id]['cancelled'] = true;
+
+                                });
+
+                                console.log(order);
+
+
+                            });
+
+                            function updateCart() {
+
+                            }
+
+                            function groupBy(collection) {
+                                var i = 0, j, val, index, curr,
+                                    categories = {}, result = [];
+                                for (i = 0, j = collection.length; i < j; i++) {
+                                    curr = collection[i];
+                                    if (!(curr.category in categories)) {
+
+                                        categories[curr.category] = {category: curr.category, items: []};
+                                        result.push(categories[curr.category]);
+
+                                    }
+                                    categories[curr.category].items.push(curr);
+                                }
+                                return result;
+                            }
+
+                            </script>
 
 
                     </div>
@@ -549,144 +760,146 @@ if (isset($_GET['logout'])) {
 
                         <h2 class="pacifico-font">Reviews</h2>
 
-                        <?php if (isset($_SESSION['id'])) { ?>
 
-                            <div class="row">
+                        <div class="row">
 
-                                <div class="col-md-offset-3 col-md-6 text-left well" style="padding-bottom: 0;">
+                            <div class="col-md-offset-3 col-md-6 text-left well" style="padding-bottom: 0;">
 
-                                    <form class="form-horizontal" id="review-form">
+                                <form class="form-horizontal" id="review-form">
 
-                                        <div class="form-group">
+                                    <div class="form-group">
 
-                                            <div class="col-md-3 text-center">
+                                        <div class="col-md-3 text-center">
 
-                                                <label>YOUR RATING</label><br>
+                                            <label>YOUR RATING</label><br>
 
-                                                <fieldset id="ratings" class="rating">
+                                            <fieldset id="ratings" class="rating">
 
-                                                    <input type="radio" id="star5" name="rating" value="5"/>
-                                                    <label class="full" for="star5" title="Awesome - 5 stars"></label>
+                                                <input type="radio" id="star5" name="rating" value="5"/>
+                                                <label class="full" for="star5"></label>
 
-                                                    <input type="radio" id="star4half" name="rating" value="4.5"/>
-                                                    <label class="half" for="star4half"
-                                                           title="Pretty good - 4.5 stars"></label>
+                                                <input type="radio" id="star4half" name="rating" value="4.5"/>
+                                                <label class="half" for="star4half"></label>
 
-                                                    <input type="radio" id="star4" name="rating" value="4"/>
-                                                    <label class="full" for="star4"
-                                                           title="Pretty good - 4 stars"></label>
+                                                <input type="radio" id="star4" name="rating" value="4"/>
+                                                <label class="full" for="star4"></label>
 
-                                                    <input type="radio" id="star3half" name="rating" value="3.5"/>
-                                                    <label class="half" for="star3half" title="Meh - 3.5 stars"></label>
+                                                <input type="radio" id="star3half" name="rating" value="3.5"/>
+                                                <label class="half" for="star3half"></label>
 
-                                                    <input type="radio" id="star3" name="rating" value="3"/>
-                                                    <label class="full" for="star3" title="Meh - 3 stars"></label>
+                                                <input type="radio" id="star3" name="rating" value="3"/>
+                                                <label class="full" for="star3"></label>
 
-                                                    <input type="radio" id="star2half" name="rating" value="2.5"/>
-                                                    <label class="half" for="star2half"
-                                                           title="Kinda bad - 2.5 stars"></label>
+                                                <input type="radio" id="star2half" name="rating" value="2.5"/>
+                                                <label class="half" for="star2half"></label>
 
-                                                    <input type="radio" id="star2" name="rating" value="2"/>
-                                                    <label class="full" for="star2" title="Kinda bad - 2 stars"></label>
+                                                <input type="radio" id="star2" name="rating" value="2"/>
+                                                <label class="full" for="star2"></label>
 
-                                                    <input type="radio" id="star1half" name="rating" value="1.5"/>
-                                                    <label class="half" for="star1half" title="Meh - 1.5 stars"></label>
+                                                <input type="radio" id="star1half" name="rating" value="1.5"/>
+                                                <label class="half" for="star1half"></label>
 
-                                                    <input type="radio" id="star1" name="rating" value="1"/>
-                                                    <label class="full" for="star1"
-                                                           title="Sucks big time - 1 star"></label>
+                                                <input type="radio" id="star1" name="rating" value="1"/>
+                                                <label class="full" for="star1"></label>
 
-                                                    <input type="radio" id="starhalf" name="rating" value="0.5"/>
-                                                    <label class="half" for="starhalf"
-                                                           title="Sucks big time - 0.5 stars"></label>
+                                                <input type="radio" id="starhalf" name="rating" value="0.5"/>
+                                                <label class="half" for="starhalf"></label>
 
-                                                </fieldset>
+                                            </fieldset>
 
-                                                <label>YOUR REACTION</label><br>
-                                                <label id="reaction">None</label>
+                                            <label>YOUR REACTION</label><br>
+                                            <label id="reaction">None</label>
 
 
-                                                <script>
+                                            <script>
 
-                                                    var reaction = $('#reaction');
+                                                var reaction = $('#reaction');
 
-                                                    $('#review-form').on('reset', function () {
-                                                        reaction.css("color", "#000").text('None');
-                                                    });
-
-
-                                                    $('.rating :radio').change(function () {
-
-                                                        var rating = $('.rating :radio:checked').val();
-                                                        if (rating == 5)
-                                                            reaction.css("color", "#3F7E00").text('Legendary');
-                                                        else if (rating == 4.5)
-                                                            reaction.css("color", "#3F7E00").text('Loved It!');
-                                                        else if (rating == 4)
-                                                            reaction.css("color", "#5BA886").text('Great!');
-                                                        else if (rating == 3.5)
-                                                            reaction.css("color", "#9ACD32").text('Good Enough!');
-                                                        else if (rating == 3)
-                                                            reaction.css("color", "#CDD614").text('Average');
-                                                        else if (rating == 2.5)
-                                                            reaction.css("color", "#FFBA00").text('Well...');
-                                                        else if (rating == 2)
-                                                            reaction.css("color", "#FF7800").text('Blah');
-                                                        else
-                                                            reaction.css("color", "#CB202D").text('Avoid!');
+                                                $('#review-form').on('reset', function () {
+                                                    reaction.css("color", "#000").text('None');
+                                                });
 
 
-                                                    });
+                                                $('.rating :radio').change(function () {
+
+                                                    var rating = $('.rating :radio:checked').val();
+                                                    if (rating == 5)
+                                                        reaction.css("color", "#3F7E00").text('Legendary');
+                                                    else if (rating == 4.5)
+                                                        reaction.css("color", "#3F7E00").text('Loved It!');
+                                                    else if (rating == 4)
+                                                        reaction.css("color", "#5BA886").text('Great!');
+                                                    else if (rating == 3.5)
+                                                        reaction.css("color", "#9ACD32").text('Good Enough!');
+                                                    else if (rating == 3)
+                                                        reaction.css("color", "#CDD614").text('Average');
+                                                    else if (rating == 2.5)
+                                                        reaction.css("color", "#FFBA00").text('Well...');
+                                                    else if (rating == 2)
+                                                        reaction.css("color", "#FF7800").text('Blah');
+                                                    else
+                                                        reaction.css("color", "#CB202D").text('Avoid!');
 
 
-                                                </script>
+                                                });
 
 
-                                            </div>
+                                            </script>
 
-                                            <div class="col-md-9">
+
+                                        </div>
+
+                                        <div class="col-md-9">
 
                                         <textarea required name="review" id="review" rows="3" class="form-control"
                                                   placeholder="Write Your Review Here"></textarea>
 
-                                                <br>
+                                            <br>
 
-                                                <div class="pull-right">
-
-                                                    <button type="reset" class="btn btn-danger"><i
-                                                            class="glyphicon glyphicon-remove"></i> Cancel
-                                                    </button>
-                                                    <button type="submit" class="btn btn-success"><i
-                                                            class="glyphicon glyphicon-ok"></i> Submit
-                                                    </button>
-
-                                                </div>
-
+                                            <div class="pull-right">
+                                                <?php if (!isset($_SESSION['id'])) { ?>
+                                                    <div class="alert alert-warning"
+                                                         style="display: inline; margin-right: 10px">
+                                                        Log In to write a review.
+                                                    </div>
+                                                <?php } ?>
+                                                <button type="reset" class="btn btn-danger"><i
+                                                        class="glyphicon glyphicon-remove"></i> Cancel
+                                                </button>
+                                                <button
+                                                    <?php if (!isset($_SESSION['id']))
+                                                        echo 'disabled ';
+                                                    ?>
+                                                    type="submit" class="btn btn-success">
+                                                    <i class="glyphicon glyphicon-ok"></i> Submit
+                                                </button>
 
                                             </div>
 
 
                                         </div>
 
-                                        <script>
 
-                                            $('#review-form').on('submit', function (e) {
-                                                e.preventDefault();
-                                                $.post('addreview.php', $('#review-form').serialize(), function (data) {
-                                                    console.log(data);
-                                                    location.reload();
-                                                });
+                                    </div>
+
+                                    <script>
+
+                                        $('#review-form').on('submit', function (e) {
+                                            e.preventDefault();
+                                            $.post('addreview.php', $('#review-form').serialize(), function (data) {
+                                                console.log(data);
+                                                location.reload();
                                             });
+                                        });
 
-                                        </script>
+                                    </script>
 
-                                    </form>
-
-                                </div>
+                                </form>
 
                             </div>
 
-                        <?php } ?>
+                        </div>
+
 
                         <div class="row">
 
@@ -768,8 +981,9 @@ if (isset($_GET['logout'])) {
                                                         else echo $row['u_name'];
                                                         ?>
                                                     </cite>
-                                                    <span
-                                                        class="pull-right"><b><?php echo $reactions[$rating] ?></b></span>
+                                                    <span class="pull-right">
+                                                        <b><?php echo $reactions[$rating] ?></b>
+                                                    </span>
                                                 </footer>
                                             </blockquote>
                                         </li>

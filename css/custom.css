@@ -85,6 +85,10 @@ table.borderless td, table.borderless th {
     outline: none;
 }
 
+.default-font{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
 #map {
     height: 100%;
 }

@@ -21,7 +21,7 @@ if (isset($_GET['logout'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Restaurants - Mumbai Restaurants | Restro</title>
+    <title>Admin Panel | Restro</title>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -116,6 +116,14 @@ if (isset($_GET['logout'])) {
                     <div class="navbar-right">
                         <?php if (isset($_SESSION['id'])) { ?>
 
+                            <ul class="nav navbar-nav" role="tablist">
+                                <li>
+                                    <a  style="color: rgb(210,210,210);"
+                                        href="restaurant.php?res_id=<?php echo $_GET['res_id'] ?>">Restaurant Page</a>
+                                </li>
+                            </ul>
+
+
                             <div class="btn-group">
                                 <button type="button" class="btn btn-success dropdown-toggle"
                                         style="margin-left: 10px; margin-top: 8px"
@@ -125,6 +133,16 @@ if (isset($_GET['logout'])) {
                                         class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
+                                    <?php if (isset($_SESSION['rest'])) { ?>
+                                        <li>
+                                            <a href="#"><i class="glyphicon glyphicon-user"></i> My Profile</a>
+                                        </li>
+                                        <li>
+                                            <a href="admin.php?res_id=<?php echo $_SESSION['rest'] ?>">
+                                                <i class="glyphicon glyphicon-cutlery"></i> My Restaurant
+                                            </a>
+                                        </li>
+                                    <?php } ?>
                                     <li style=""><a href="?logout"><i class="glyphicon glyphicon-log-out"></i>
                                             Logout</a>
                                     </li>
@@ -154,7 +172,12 @@ if (isset($_GET['logout'])) {
 
                     <div class="col-md-offset-1 col-md-6">
 
-                        <h2 class="pacifico-font"><?php echo $details['name'] ?></h2>
+                        <h2 class="pacifico-font">
+                            <?php echo $details['name'] ?>,
+                            <small><?php echo $details['locality'] ?></small>
+                            <span class="default-font">  |  Admin Panel</span>
+                        </h2>
+                        <p class="lead"><?php echo $details['address'] ?></p>
 
                     </div>
 
@@ -167,13 +190,17 @@ if (isset($_GET['logout'])) {
                         <ul class="nav nav-tabs nav-justified" role="tablist">
                             <li role="presentation" class="active">
                                 <a href="#tablebookings" aria-controls="tablebookings" role="tab"
+                                   style="border-color: #3F51B5; border-right: none"
                                    data-toggle="tab">Table Bookings</a>
                             </li>
                             <li role="presentation">
-                                <a href="#orders" aria-controls="orders" role="tab" data-toggle="tab">Orders</a>
+                                <a href="#orders" aria-controls="orders" role="tab"
+                                   style="border-color: #3F51B5; border-right: none"
+                                   data-toggle="tab">Orders</a>
                             </li>
                             <li role="presentation">
-                                <a href="#menu" aria-controls="menu" role="tab" data-toggle="tab">Menu</a>
+                                <a href="#menu" aria-controls="menu" role="tab" style="border-color: #3F51B5"
+                                   data-toggle="tab">Menu</a>
                             </li>
                         </ul>
 
@@ -181,7 +208,7 @@ if (isset($_GET['logout'])) {
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane fade in active" id="tablebookings">
 
-                                <table class="table table-hover" style="padding-top: 20px">
+                                <table class="table table-hover" style="margin-top: 20px">
                                     <thead>
                                     <tr>
                                         <th>NAME</th>
@@ -286,7 +313,7 @@ if (isset($_GET['logout'])) {
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="menu">
 
-                                <table class="table table-hover" style="padding-top: 20px">
+                                <table class="table table-hover" style="margin-top: 20px">
                                     <thead>
                                     <tr>
                                         <th>ID</th>

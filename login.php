@@ -21,6 +21,8 @@ if ($result = mysqli_query($link, $query)) {
             $_SESSION['name'] = $row['name'];
             $_SESSION['email'] = $row['email'];
             $_SESSION['type'] = $row['type'];
+            if (isset($row['rest']))
+                $_SESSION['rest'] = $row['rest'];
         } else echo '<div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-top: 20px">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 Check your email to activate your account.</div>';

@@ -6,8 +6,18 @@
     <file url="file://$PROJECT_DIR$/addreview.php" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/admin.php" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/booktable.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/conn.php" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/editmenu.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/getmenu.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/getphotos.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/index.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/login.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/order.php" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/respondbooking.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/rest.php" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/restaurant.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/search.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sendmail.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/signup.php" dialect="MySQL" />
   </component>
 </project>
