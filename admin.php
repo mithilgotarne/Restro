@@ -88,7 +88,8 @@ if (isset($_GET['logout'])) {
     && $_GET['res_id'] != ''
     && isset($_SESSION['id'])
     && isset($_SESSION['type'])
-    && $_SESSION['type'] == 'admin'
+    && $_SESSION['type'] == "admin" && isset($_SESSION['rest'])
+    && $_SESSION['rest'] == $_GET['res_id']
 ) {
     include('conn.php');
     $id = mysqli_real_escape_string($link, $_GET['res_id']);
@@ -118,8 +119,8 @@ if (isset($_GET['logout'])) {
 
                             <ul class="nav navbar-nav" role="tablist">
                                 <li>
-                                    <a  style="color: rgb(210,210,210);"
-                                        href="restaurant.php?res_id=<?php echo $_GET['res_id'] ?>">Restaurant Page</a>
+                                    <a style="color: rgb(210,210,210);"
+                                       href="restaurant.php?res_id=<?php echo $_GET['res_id'] ?>">Restaurant Page</a>
                                 </li>
                             </ul>
 
@@ -309,7 +310,135 @@ if (isset($_GET['logout'])) {
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="orders">
 
+                                <table class="table table-hover" style="margin-top: 20px">
+                                    <thead>
+                                    <tr>
+                                        <th>NAME</th>
+                                        <th>ADDRESS</th>
+                                        <th>PHONE</th>
+                                        <th>TIME</th>
+                                        <th>ITEMS</th>
+                                        <th>REQUEST</th>
+                                        <th>BILL</th>
+                                        <th>ACTION</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
 
+                                    <?php
+                                    $query = "SELECT * 
+                                    FROM orders 
+                                    JOIN order_items 
+                                    ON orders.o_id = order_items.o_id
+                                    WHERE orders.res_id = '" . $_GET['res_id'] . "'";
+
+                                    $orders = array();
+
+                                    if ($result = mysqli_query($link, $query)) {
+
+                                        while ($row = mysqli_fetch_assoc($result)) {
+
+                                            //print_r($row);
+                                            if (!isset($orders[$row['o_id']])) {
+                                                $orders[$row['o_id']]['o_id'] = $row['o_id'];
+                                                $orders[$row['o_id']]['u_name'] = $row['u_name'];
+                                                $orders[$row['o_id']]['address'] = $row['address'];
+                                                $orders[$row['o_id']]['bill'] = $row['bill'];
+                                                $orders[$row['o_id']]['phone'] = $row['phone'];
+                                                $orders[$row['o_id']]['status'] = $row['status'];
+                                                $orders[$row['o_id']]['o_time'] = $row['o_time'];
+                                                $orders[$row['o_id']]['request'] = $row['request'];
+                                                $orders[$row['o_id']]['items'] = array();
+                                            }
+                                            array_push($orders[$row['o_id']]['items'], $row);
+
+                                        }
+
+                                        //print_r($orders);
+
+                                    }
+
+                                    foreach ($orders as $order) {
+
+                                        ?>
+
+                                        <tr>
+                                            <td><?php echo $order['u_name']; ?></td>
+                                            <td><?php echo $order['address']; ?></td>
+                                            <td><?php echo $order['phone']; ?></td>
+                                            <td><?php echo $order['o_time']; ?></td>
+                                            <td><?php
+                                                foreach ($order['items'] as $item) {
+                                                    echo $item['item']
+                                                        . '(' . $item['rate'] . ')'
+                                                        . ' x ' . $item['quantity'] . '<br>';
+                                                }
+                                                ?></td>
+                                            <td><?php echo $order['request']; ?></td>
+                                            <td><?php echo '₹' . $order['bill']; ?></td>
+                                            <td><?php if ($order['status'] == 'Ordered') {
+
+                                                    echo '<button
+                                                    onclick="rejectOrder(' . $order['o_id'] . ')"
+                                                    class="btn btn-danger">
+                                                    <i class="glyphicon glyphicon-remove"></i>
+                                                </button>
+                                                <button
+                                                    onclick="acceptOrder(' . $order['o_id'] . ')"
+                                                    class="btn btn-success">
+                                                    <i class="glyphicon glyphicon-ok"></i>
+                                                </button>';
+
+                                                } else if ($order['status'] == "Accepted")
+                                                    echo '<span class="text-success"><b>Accepted</b></span>';
+                                                else{
+                                                    echo '<span class="text-danger"><b>Rejected</b></span>';
+                                                }?>
+                                            </td>
+                                        </tr>
+
+
+                                    <?php } ?>
+                                    </tbody>
+                                </table>
+                                <script>
+
+                                    var acceptOrder = function (oid) {
+
+                                        waitingDialog.show('Sending Mail...');
+
+                                        $.get('respondorder.php',
+                                            {
+                                                o_id: oid, accepted: 'Accepted'
+                                            }
+                                            ,
+                                            function (data) {
+                                                console.log(data);
+                                                location.reload();
+                                            }
+                                        );
+
+                                    };
+
+                                    var rejectOrder = function (oid) {
+
+                                        waitingDialog.show('Sending Mail...');
+
+                                        $.get('respondorder.php',
+                                            {
+                                                o_id: oid, accepted: 'Rejected'
+                                            }
+                                            ,
+                                            function (data) {
+                                                console.log(data);
+                                                location.reload();
+                                            }
+                                        );
+
+
+                                    };
+
+                                </script>
                             </div>
                             <div role="tabpanel" class="tab-pane fade" id="menu">
 

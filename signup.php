@@ -19,7 +19,10 @@ if ($result = mysqli_query($link, $query)) {
 }
 
 if ($results)
-    $error .= "User is already registered. <br />";
+    echo '<div class="alert alert-info" style="margin-top: 20px">
+    	        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    	    User already exists.
+            </div>';
 else {
 
     $query = "INSERT INTO users (email, password, name) 

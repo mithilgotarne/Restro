@@ -25,6 +25,7 @@ if (isset($_GET['logout'])) {
             crossorigin="anonymous"></script>
 
     <!--Maps API Script-->
+    <!---->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8g6dEvdguylYmEBQCFT3tuaqP5b4t-QU"></script>
 
     <script src="js/map-icons.js"></script>
@@ -47,6 +48,44 @@ if (isset($_GET['logout'])) {
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+
+    <style>
+
+        .thumbnail {
+            padding: 0;
+        }
+
+        .panel {
+            position: relative;
+        }
+
+        .panel > .panel-heading:after, .panel > .panel-heading:before {
+            position: absolute;
+            top: 11px;
+            left: -16px;
+            right: 100%;
+            width: 0;
+            height: 0;
+            display: block;
+            content: " ";
+            border-color: transparent;
+            border-style: solid solid outset;
+            pointer-events: none;
+        }
+
+        .panel > .panel-heading:after {
+            border-width: 7px;
+            border-right-color: #f7f7f7;
+            margin-top: 1px;
+            margin-left: 2px;
+        }
+
+        .panel > .panel-heading:before {
+            border-right-color: #ddd;
+            border-width: 8px;
+        }
+
+    </style>
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="50" style="padding-top: 0">
 
@@ -123,9 +162,9 @@ if (isset($_GET['logout'])) {
                                         class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li>
+                                    <!--<li>
                                         <a href="#"><i class="glyphicon glyphicon-user"></i> My Profile</a>
-                                    </li>
+                                    </li>-->
                                     <?php if (isset($_SESSION['rest'])) { ?>
                                         <li>
                                             <a href="admin.php?res_id=<?php echo $_SESSION['rest'] ?>">
@@ -265,10 +304,12 @@ if (isset($_GET['logout'])) {
 
                     $url = $details['menu_url'];
 
-                    $html = file_get_html($url);
+                    if ($html = file_get_html($url)){
+
 
                     $array = [];
                     $element = $html->find('script')[15];
+
 
                     $str = $element->innertext;
 
@@ -330,6 +371,8 @@ if (isset($_GET['logout'])) {
 
                 </div>
 
+                <?php } ?>
+
                 <div class="row" id="ordernow"
                      style="min-height: 100vh; padding-top: 50px;">
 
@@ -337,7 +380,7 @@ if (isset($_GET['logout'])) {
 
                         <h2 class="pacifico-font">Order Now</h2>
 
-                        <form class="form-horizontal text-left">
+                        <form class="form-horizontal text-left" id="order-form">
                             <div class="row" style="height: 100%;">
 
                                 <div class="col-md-4">
@@ -393,15 +436,32 @@ if (isset($_GET['logout'])) {
                                     <div class="col-md-12 well" id="cart-main">
 
                                         <h3 class="text-center">2. Confirm Cart</h3>
-                                        <div id="cart">
 
+                                        <div class="alert alert-info" id="alert-empty-cart">
+                                            <strong>Cart Empty!</strong> No items in cart.
+                                        </div>
+
+                                        <div id="cart">
 
 
                                         </div>
 
-                                        <button class="btn btn-success pull-right" id="confirm-cart">
-                                            <i class="glyphicon glyphicon-thumbs-up"></i> Confirm
-                                        </button>
+                                        <div class="clearfix">
+
+                                            <button class="btn btn-danger pull-left"
+                                                    style="display: none; margin-top: 15px"
+                                                    id="reset-cart">
+                                                <i class="glyphicon glyphicon-refresh"></i> Reset
+                                            </button>
+
+
+                                            <button class="btn btn-success pull-right"
+                                                    style="display: none; margin-top: 15px"
+                                                    id="confirm-cart">
+                                                <i class="glyphicon glyphicon-thumbs-up"></i> Confirm
+                                            </button>
+
+                                        </div>
 
 
                                     </div>
@@ -410,9 +470,103 @@ if (isset($_GET['logout'])) {
 
                                 <div class="col-md-4">
 
-                                    <div class="col-md-12 well">
+                                    <div class="col-md-12 well" style="padding-bottom: 0">
 
                                         <h3 class="text-center">3. Enter delivery details</h3>
+
+                                        <div class="form-group">
+
+                                            <div class="col-md-12">
+
+                                                <label for="order-name">FULL NAME</label>
+                                                <br>
+                                                <input
+                                                    value="<?php if (isset($_SESSION['name'])) echo $_SESSION['name'] ?>"
+                                                    required type="text" class="form-control" id="order-name"
+                                                    name="order-name" disabled
+                                                    placeholder="Enter your full name">
+
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+
+                                                <label for="order-phone">PHONE NUMBER</label>
+                                                <br>
+                                                <input required type="tel" class="form-control" id="order-phone"
+                                                       name="order-phone" disabled pattern="^[789]\d{9}$"
+                                                       placeholder="Enter your phone number">
+
+
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+
+                                                <label for="order-address">DELIVERY ADDRESS</label>
+                                                <br>
+                                                <textarea class="form-control" rows="2" id="order-address"
+                                                          name="order-address" disabled required
+                                                          placeholder="Enter delivery address"></textarea>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+
+                                                <label for="order-requests">ADDITIONAL REQUESTS</label>
+                                                <br>
+                                                <textarea class="form-control" rows="2" id="order-requests"
+                                                          name="order-requests" disabled
+                                                          placeholder="Let us know if any additional requests"></textarea>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-12" id="bill-text">
+
+                                            </div>
+                                        </div>
+
+
+                                        <?php if (!isset($_SESSION['id'])) { ?>
+                                            <div class="form-group">
+                                                <div class="alert alert-info">
+                                                    <strong>Please Log In to order.</strong>
+                                                </div>
+
+                                            </div>
+                                        <?php }
+                                        ?>
+
+
+                                        <div class="form-group">
+
+                                            <div class="col-md-12">
+
+                                                <button style="margin-bottom: 20px" id="edit-order-items"
+                                                        disabled
+                                                        class="pull-left btn btn-danger"><i
+                                                        class="glyphicon glyphicon-pencil"></i> Edit Items
+                                                </button>
+
+                                                <button style="margin-bottom: 20px"
+                                                        type="submit" disabled id="send-order"
+                                                        class="pull-right btn btn-success"><i
+                                                        class="glyphicon glyphicon-shopping-cart"></i> Send Order
+                                                </button>
+
+
+                                            </div>
+
+                                        </div>
+
 
                                     </div>
 
@@ -424,8 +578,10 @@ if (isset($_GET['logout'])) {
 
                             var items = [];
                             var order = {
-                                items: []
+                                items: [],
+                                bill: 0
                             };
+
 
                             $.get('getmenu.php?res_id=<?php echo $_GET['res_id'] ?>', function (data) {
 
@@ -474,53 +630,154 @@ if (isset($_GET['logout'])) {
                                 var quantity = $('#quantity').val();
                                 var itemObject = items[cat].items[item];
 
-                                order['items'].push({item: itemObject, quantity: +quantity});
+                                var found = false;
 
-                                $('#cart').append(`
+                                for (var i = 0; i < order.items.length; i++) {
 
-                                        <div class="row" id="cart-item-` + (order.items.length - 1) + `">
-                                            <div class="col-md-12"><b>` + itemObject.name + `</b></div>
-                                        </div>
-                                        <div class="row text-center" id="cart-` + (order.items.length - 1) + `">
-                                            <div class="col-md-2">` + (+quantity) + `</div>
-                                            <div class="col-md-2"> X </div>
-                                            <div class="col-md-2">` + itemObject.rate + `</div>
-                                            <div class="col-md-2"> = </div>
-                                            <div class="col-md-2">` + (+quantity * itemObject.rate).toFixed(2) + `</div>
-                                            <div class="col-md-2">
-                                                <button class="delete-cart-item"
-                                                    id="` + (order.items.length - 1) + `">
-                                                    <i class="glyphicon glyphicon-trash"></i>
-                                                </button>
-                                            </div>
-                                        </div>
+                                    if (order.items[i].item == itemObject) {
+                                        order.items[i].quantity += (+quantity);
+                                        found = true;
+                                        break;
+                                    }
 
-                                `);
+                                }
+                                if (!found)
+                                    order['items'].push({item: itemObject, quantity: +quantity});
 
-                                if(order.items.length == 0)
-                                    $('#confirm-cart').hide();
-                                else
-                                    $('#confirm-cart').show();
-
-                                $('.delete-cart-item').click(function (e) {
-
-                                    e.preventDefault();
-                                    var id = $(this).attr("id");
-
-                                    $('#cart-item-' + id).remove();
-                                    $('#cart-' + id).remove();
-
-                                    order.items[+id]['cancelled'] = true;
-
-                                });
+                                updateCart();
 
                                 console.log(order);
 
 
                             });
 
+                            $('#reset-cart').click(function (e) {
+                                e.preventDefault();
+                                order.items = [];
+                                updateCart();
+                            });
+
+                            $('#confirm-cart').click(function (e) {
+                                e.preventDefault();
+                                $('#confirm-cart').prop("disabled", true);
+                                $('#add-item').prop("disabled", true);
+                                $('#reset-cart').prop("disabled", true);
+                                $('.delete-cart-item').prop("disabled", true);
+                                $('#order-name').prop("disabled", false);
+                                $('#order-address').prop("disabled", false);
+                                $('#order-phone').prop("disabled", false);
+                                $('#order-requests').prop("disabled", false);
+                                $('#send-order').prop("disabled", false);
+                                $('#edit-order-items').prop("disabled", false);
+
+                            });
+
+                            $('#edit-order-items').click(function (e) {
+                                e.preventDefault();
+                                $('#confirm-cart').prop("disabled", false);
+                                $('#add-item').prop("disabled", false);
+                                $('#reset-cart').prop("disabled", false);
+                                $('.delete-cart-item').prop("disabled", false);
+                                $('#order-name').prop("disabled", true);
+                                $('#order-address').prop("disabled", true);
+                                $('#order-phone').prop("disabled", true);
+                                $('#order-requests').prop("disabled", true);
+                                $('#send-order').prop("disabled", true);
+                                $('#edit-order-items').prop("disabled", true);
+
+                            });
+
+                            $('#order-form').on('submit', function (e) {
+                                e.preventDefault();
+
+                                order['name'] = $('#order-name').val();
+                                order['phone'] = $('#order-phone').val();
+                                order['address'] = $('#order-address').val();
+                                order['request'] = $('#order-requests').val();
+
+                                waitingDialog.show('Sending request');
+
+                                $.post('order.php',
+                                    {
+                                        order: JSON.stringify(order)
+                                    },
+                                    function (response) {
+                                        console.log(response);
+                                        waitingDialog.changeMessage(response);
+                                        $('#order-form').trigger('reset');
+                                        $('#edit-order-items').click();
+                                        $('#reset-cart').click();
+                                        setTimeout(function () {
+                                            waitingDialog.hide();
+                                        }, 2000);
+                                    });
+
+                            });
+
+
                             function updateCart() {
 
+                                order.bill = 0;
+
+                                $('#cart div').remove();
+
+                                if (order.items.length > 0) {
+
+                                    $('#alert-empty-cart').hide();
+
+                                    $('#confirm-cart').show();
+                                    $('#reset-cart').show();
+
+                                    for (var i = 0; i < order.items.length; i++) {
+
+                                        $('#cart').append(`
+
+                                        <div class="row" id="cart-item-` + i + `">
+                                            <div class="col-md-12"><b>` + order.items[i].item.name + `</b></div>
+                                        </div>
+                                        <div class="row text-center" id="cart-` + i + `" style="
+                                            line-height: 2.66em;">
+                                            <div class="col-md-2">` + (order.items[i].quantity) + `</div>
+                                            <div class="col-md-2"> X </div>
+                                            <div class="col-md-2">` + order.items[i].item.rate + `</div>
+                                            <div class="col-md-2"> = </div>
+                                            <div class="col-md-2">` + (order.items[i].quantity * order.items[i].item.rate).toFixed(2) + `</div>
+                                            <div class="col-md-2">
+                                                <button class="delete-cart-item btn btn-default"
+                                                    id="` + i + `"><i class="glyphicon glyphicon-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        `);
+
+
+                                        order.bill += (order.items[i].quantity * order.items[i].item.rate);
+
+
+                                    }
+
+                                    $('.delete-cart-item').click(function (e) {
+
+                                        e.preventDefault();
+                                        var id = $(this).attr("id");
+
+                                        $('#cart-item-' + id).remove();
+                                        $('#cart-' + id).remove();
+
+                                        order.items.splice(+id, 1);
+
+                                        updateCart();
+
+                                    });
+                                }
+                                else {
+                                    $('#confirm-cart').hide();
+                                    $('#reset-cart').hide();
+                                    $('#alert-empty-cart').show();
+                                }
+
+                                $('#bill-text').html('<label>BILL: ₹' + order.bill.toFixed(2) + '</label>');
                             }
 
                             function groupBy(collection) {
@@ -539,7 +796,7 @@ if (isset($_GET['logout'])) {
                                 return result;
                             }
 
-                            </script>
+                        </script>
 
 
                     </div>
@@ -694,6 +951,7 @@ if (isset($_GET['logout'])) {
                                     <label for="guest-phone">PHONE NUMBER</label>
                                     <br>
                                     <input required type="tel" class="form-control" id="guest-phone" name="guest-phone"
+                                           pattern="^[789]\d{9}$"
                                            placeholder="Enter your phone number">
 
 
@@ -903,7 +1161,7 @@ if (isset($_GET['logout'])) {
 
                         <div class="row">
 
-                            <ul class="col-md-offset-3 col-md-6" style="list-style: none; padding: 0">
+                            <div class="col-md-offset-3 col-md-6" style="list-style: none; padding: 0">
 
                                 <?php
 
@@ -965,35 +1223,49 @@ if (isset($_GET['logout'])) {
 
                                         ?>
 
-                                        <li class="text-left col-md-6" style="padding-bottom: 0">
-                                            <blockquote class="well">
-                                                <p><?php echo $row['review'] ?>
-                                                    <span
-                                                        style="background-color: <?php echo $colors[$rating] ?>"
-                                                        class="badge pull-right">
-                                                        <?php echo 'Rated ' . $row['rating']; ?></span>
-                                                </p>
-                                                <footer><?php echo $ago_string ?>
-                                                    <cite>
-                                                        <?php
-                                                        if (isset($_SESSION['name']) && ($row['u_name'] == $_SESSION['name']))
-                                                            echo 'You';
-                                                        else echo $row['u_name'];
-                                                        ?>
-                                                    </cite>
-                                                    <span class="pull-right">
-                                                        <b><?php echo $reactions[$rating] ?></b>
-                                                    </span>
-                                                </footer>
-                                            </blockquote>
-                                        </li>
+                                        <div class="row text-left">
+                                            <div class="col-sm-2">
+                                                <div class="thumbnail">
+                                                    <img class="img-responsive user-photo"
+                                                         src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-10">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <strong>
+                                                            <?php echo $reactions[$rating] ?>
+                                                        </strong>
+                                                        said,
+                                                        <strong>
+                                                            <cite class="rev-user">
+                                                                <?php
+                                                                if (isset($_SESSION['name']) && ($row['u_name'] == $_SESSION['name']))
+                                                                    echo 'You';
+                                                                else echo $row['u_name'];
+                                                                ?>
+                                                            </cite>
+                                                        </strong> <span
+                                                            class="text-muted"> posted <?php echo $ago_string ?>
+                                                            </span><span
+                                                            style="background-color: <?php echo $colors[$rating] ?>; line-height: 1.5em"
+                                                            class="badge pull-right">
+                                                            <?php echo 'Rated ' . $row['rating']; ?></span>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <?php echo $row['review'] ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                     <?php }
                                 }
                                 ?>
 
 
-                            </ul>
+                            </div>
 
 
                         </div>
@@ -1014,7 +1286,9 @@ if (isset($_GET['logout'])) {
     header('Location:search.php');
 }
 ?>
-<?php if (!isset($_SESSION['id'])) { ?>
+<?php
+
+if (!isset($_SESSION['id'])) { ?>
     <!-- Modal -->
     <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog  modal-sm" role="document">
@@ -1058,13 +1332,8 @@ if (isset($_GET['logout'])) {
                                 <br>
                                 <div class="clearfix">
 
-                                    <div class="checkbox pull-left">
-                                        <label>
-                                            <input type="checkbox"> Remember me
-                                        </label>
-                                    </div>
-
-                                    <button type="submit" class="btn btn-success pull-right">Log In</button>
+                                    <button type="submit" class="btn btn-success pull-right form-control">Log In
+                                    </button>
 
                                 </div>
 
@@ -1109,7 +1378,7 @@ if (isset($_GET['logout'])) {
 
                                 </div>
                                 <br>
-                                <button name="submit" type="submit" class="btn btn-success"
+                                <button name="submit" type="submit" class="btn btn-success form-control" id="signup-btn"
                                         value="Sign Up!">Sign Up!
                                 </button>
 
@@ -1121,8 +1390,8 @@ if (isset($_GET['logout'])) {
             </div>
         </div>
     </div>
-
 <?php } ?>
+
 
 <script src="js/sign.js"></script>
 </body>

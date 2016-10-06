@@ -138,7 +138,7 @@ if (isset($_GET['logout'])) {
                             class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li style=""><a href="#"><i class="glyphicon glyphicon-user"></i> My Profile</a></li>
+                        <!--<li style=""><a href="#"><i class="glyphicon glyphicon-user"></i> My Profile</a></li>-->
                         <?php if(isset($_SESSION['rest'])) { ?>
                             <li>
                                 <a href="admin.php?res_id=<?php echo $_SESSION['rest']?>">
@@ -299,13 +299,7 @@ if (!isset($_SESSION['id'])) { ?>
                                 <br>
                                 <div class="clearfix">
 
-                                    <div class="checkbox pull-left">
-                                        <label>
-                                            <input type="checkbox"> Remember me
-                                        </label>
-                                    </div>
-
-                                    <button type="submit" class="btn btn-success pull-right">Log In</button>
+                                    <button type="submit" class="btn btn-success pull-right form-control">Log In</button>
 
                                 </div>
 
@@ -350,7 +344,7 @@ if (!isset($_SESSION['id'])) { ?>
 
                                 </div>
                                 <br>
-                                <button name="submit" type="submit" class="btn btn-success"
+                                <button name="submit" type="submit" class="btn btn-success form-control" id="signup-btn"
                                         value="Sign Up!">Sign Up!
                                 </button>
 

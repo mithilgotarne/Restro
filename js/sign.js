@@ -3,11 +3,13 @@
  */
 $('#r-password').change(function () {
 
-    $('#signup-form .help-block').remove();
+    $('#signup-tab .alert').remove();
 
 
     if ($(this).val() == $('#s-password').val()) {
+
     }
+
 
     else
         $('#signup-tab')
@@ -44,15 +46,39 @@ $('#login-form').on('submit', function (event) {
 $('#signup-form').on('submit', function (event) {
 
     event.preventDefault();
-    $.post('signup.php', $('#signup-form').serialize(), function (data) {
+    $('#signup-tab .alert').remove();
 
-        $('#signup-tab .alert').remove();
-        if (data && data != "") {
-            $('#signup-tab').append(data);
-        }
-        else
-            location.reload();
+    var email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+    if(!email_regex.test($('#s-email').val()))
+    {
+        $('#signup-tab')
+            .append(`<div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-top: 20px">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        Entered Email is invalid.</div>`);
 
-    });
+    }
+    else if ($('#r-password').val() == $('#s-password').val()) {
+
+
+        $.post('signup.php', $('#signup-form').serialize(), function (data) {
+
+            $('#signup-tab .alert').remove();
+            if (data && data != "") {
+                $('#signup-tab').append(data);
+            }
+            else
+                location.reload();
+
+        });
+    }
+
+    else
+        $('#signup-tab')
+            .append(`<div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-top: 20px">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Oh Snap!</strong> Passwords are not matching. </div>`);
+
+    $('#r-password').val('');
+    $('#s-password').val('');
 
 });

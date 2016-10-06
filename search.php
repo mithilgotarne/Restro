@@ -86,10 +86,10 @@ if (isset($_GET['logout'])) {
                             class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li style=""><a href="#"><i class="glyphicon glyphicon-user"></i> My Profile</a></li>
-                        <?php if(isset($_SESSION['rest'])) { ?>
+                        <!--<li style=""><a href="#"><i class="glyphicon glyphicon-user"></i> My Profile</a></li>-->
+                        <?php if (isset($_SESSION['rest'])) { ?>
                             <li>
-                                <a href="admin.php?res_id=<?php echo $_SESSION['rest']?>">
+                                <a href="admin.php?res_id=<?php echo $_SESSION['rest'] ?>">
                                     <i class="glyphicon glyphicon-cutlery"></i> My Restaurant
                                 </a>
                             </li>
@@ -241,8 +241,9 @@ if (isset($_GET['logout'])) {
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<?php
 
-<?php if (!isset($_SESSION['id'])) { ?>
+if (!isset($_SESSION['id'])) { ?>
     <!-- Modal -->
     <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog  modal-sm" role="document">
@@ -286,13 +287,8 @@ if (isset($_GET['logout'])) {
                                 <br>
                                 <div class="clearfix">
 
-                                    <div class="checkbox pull-left">
-                                        <label>
-                                            <input type="checkbox"> Remember me
-                                        </label>
-                                    </div>
-
-                                    <button type="submit" class="btn btn-success pull-right">Log In</button>
+                                    <button type="submit" class="btn btn-success pull-right form-control">Log In
+                                    </button>
 
                                 </div>
 
@@ -337,7 +333,7 @@ if (isset($_GET['logout'])) {
 
                                 </div>
                                 <br>
-                                <button name="submit" type="submit" class="btn btn-success"
+                                <button name="submit" type="submit" class="btn btn-success form-control" id="signup-btn"
                                         value="Sign Up!">Sign Up!
                                 </button>
 
@@ -349,8 +345,8 @@ if (isset($_GET['logout'])) {
             </div>
         </div>
     </div>
-
 <?php } ?>
+
 
 <script src="js/maps.js"></script>
 <script type="text/javascript" src="js/sign.js"></script>
