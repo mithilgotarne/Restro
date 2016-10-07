@@ -106,7 +106,7 @@ if (isset($_GET['logout'])) {
 
             $details = json_decode($row['details'], true);
 
-            $url = $details['photos_url'];
+            /*$url = $details['photos_url'];
 
             $html = file_get_html($url);
 
@@ -117,7 +117,7 @@ if (isset($_GET['logout'])) {
                 $class = $element->getAttribute('class');
                 if (strpos($class, 'photo-thumb'))
                     array_push($array, preg_split('/(\?)/', $src)[0]);
-            }
+            }*/
 
             $pictures = [
                 "images/res_main_1.jpg",
@@ -162,9 +162,6 @@ if (isset($_GET['logout'])) {
                                         class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <!--<li>
-                                        <a href="#"><i class="glyphicon glyphicon-user"></i> My Profile</a>
-                                    </li>-->
                                     <?php if (isset($_SESSION['rest'])) { ?>
                                         <li>
                                             <a href="admin.php?res_id=<?php echo $_SESSION['rest'] ?>">
@@ -308,7 +305,7 @@ if (isset($_GET['logout'])) {
 
 
                     $array = [];
-                    $element = $html->find('script')[15];
+                    $element = $html->find('script')[16];
 
 
                     $str = $element->innertext;
