@@ -318,6 +318,14 @@ if (!isset($_SESSION['id'])) { ?>
                                 <br>
                                 <div class="input-group">
 
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                    <input required id="dob" name="dob" type="date" class="form-control"
+                                           placeholder="Date of Birth">
+
+                                </div>
+                                <br>
+                                <div class="input-group">
+
                                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                                     <input required id="s-password" name="password" type="password" class="form-control"
                                            placeholder="Password">

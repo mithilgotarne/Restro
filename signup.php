@@ -9,6 +9,7 @@ $error = "";
 $email = mysqli_real_escape_string($link, $_POST['email']);
 $password = md5(md5($_POST['email']) . $_POST['password']);
 $name = mysqli_real_escape_string($link, $_POST['name']);
+$dob = $_POST['dob'];
 
 $query = "SELECT * FROM users WHERE email = '$email'";
 
@@ -25,8 +26,8 @@ if ($results)
             </div>';
 else {
 
-    $query = "INSERT INTO users (email, password, name) 
-				VALUES ('$email', '$password', '$name')";
+    $query = "INSERT INTO users (email, password, name, dob) 
+				VALUES ('$email', '$password', '$name', '$dob')";
 
     if (mysqli_query($link, $query)) {
 

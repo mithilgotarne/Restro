@@ -49,8 +49,7 @@ $('#signup-form').on('submit', function (event) {
     $('#signup-tab .alert').remove();
 
     var email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
-    if(!email_regex.test($('#s-email').val()))
-    {
+    if (!email_regex.test($('#s-email').val())) {
         $('#signup-tab')
             .append(`<div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-top: 20px">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -58,6 +57,8 @@ $('#signup-form').on('submit', function (event) {
 
     }
     else if ($('#r-password').val() == $('#s-password').val()) {
+
+        console.log($('#signup-form').serialize());
 
 
         $.post('signup.php', $('#signup-form').serialize(), function (data) {

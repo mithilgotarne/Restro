@@ -4,7 +4,7 @@ session_start();
 if (isset($_GET['logout'])) {
     session_destroy();
     $message = "You are successfully logged out. Have a nice day!";
-    header('location:index.php');
+    header('location:restaurant.php?res_id=' . $_GET['res_id']);
 }
 ?>
 
@@ -170,7 +170,8 @@ if (isset($_GET['logout'])) {
                                         </li>
                                     <?php } ?>
                                     <li role="separator" class="divider"></li>
-                                    <li><a href="?logout"><i class="glyphicon glyphicon-log-out"></i>
+                                    <li><a href="?res_id=<?php echo $_GET['res_id'] ?>&logout"><i
+                                                class="glyphicon glyphicon-log-out"></i>
                                             Logout</a></li>
                                 </ul>
                             </div>
@@ -774,7 +775,34 @@ if (isset($_GET['logout'])) {
                                     $('#alert-empty-cart').show();
                                 }
 
-                                $('#bill-text').html('<label>BILL: ₹' + order.bill.toFixed(2) + '</label>');
+                                <?php
+                                if (isset($_SESSION['dob'])) {
+
+                                    if (date("m-d", strtotime($_SESSION['dob'])) == date("m-d")) {
+
+                                        echo "
+                                            $('#bill-text')
+                                            .html('<label>BILL: ₹' + order.bill.toFixed(2) + ' + Discount 10% = ' + (order.bill * 0.9).toFixed(2) + '</label>');
+                                            order.bill = order.bill * 0.9;
+                                        
+                                        ";
+
+                                    } else
+                                        echo "
+                                            $('#bill-text')
+                                            .html('<label>BILL: ₹' + order.bill.toFixed(2) + '</label>');                                       
+                                        ";
+
+
+                                } else
+                                    echo "
+                                            $('#bill-text')
+                                            .html('<label>BILL: ₹' + order.bill.toFixed(2) + '</label>');                                       
+                                        ";
+
+                                ?>
+
+
                             }
 
                             function groupBy(collection) {
@@ -1277,10 +1305,10 @@ if (isset($_GET['logout'])) {
             </div>
 
 
-        <?php } else header('Location:search.php');
-    } else header('Location:search.php');
+        <?php } else header('Location:');
+    } else header('Location:');
 } else {
-    header('Location:search.php');
+    header('Location:');
 }
 ?>
 <?php
@@ -1289,8 +1317,8 @@ if (!isset($_SESSION['id'])) { ?>
     <!-- Modal -->
     <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog  modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
+            <div class="modal-content text-center">
+                <div class="modal-header pacifico-font">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                     <h2><i class="glyphicon glyphicon-cutlery"></i> Restro</h2>
@@ -1355,6 +1383,14 @@ if (!isset($_SESSION['id'])) { ?>
                                     <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
                                     <input required id="s-email" name="email" type="email" class="form-control"
                                            placeholder="Email">
+
+                                </div>
+                                <br>
+                                <div class="input-group">
+
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                    <input required id="dob" name="dob" type="date" class="form-control"
+                                           placeholder="Date of Birth">
 
                                 </div>
                                 <br>

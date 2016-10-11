@@ -39,12 +39,59 @@ if (isset($_GET['logout'])) {
     <![endif]-->
     <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
     <style>
-        body {
-            padding: 0;
-            background: url('images/landing-bg.jpg') no-repeat;
-            background-size: cover;
-            color: white;
-        }
+        <?php
+        if(isset($_SESSION['dob']))
+            if (date("m-d", strtotime($_SESSION['dob'])) == date("m-d"))
+                echo "
+                   body {
+                        padding: 0;
+                        background: url('images/birthday.jpg') no-repeat;
+                        background-size: cover;
+                        color: white;
+                    }
+                    .main-container, .navbar{
+                        background: rgba(0,0,0,0.2)
+                    }
+                    
+                    #happy-birthday-audio{
+                        display: none;
+                    }
+                ";
+            else
+
+                echo "
+                
+                     body {
+                        padding: 0;
+                        background: url('images/landing-bg.jpg') no-repeat;
+                        background-size: cover;
+                        color: white;
+                    }
+                    
+                    .main-container, .navbar{
+                        background: rgba(0,0,0,0.5)
+                    }
+                
+                ";
+        else
+
+                echo "
+                
+                     body {
+                        padding: 0;
+                        background: url('images/landing-bg.jpg') no-repeat;
+                        background-size: cover;
+                        color: white;
+                    }
+                    
+                    .main-container, .navbar{
+                        background: rgba(0,0,0,0.5)
+                    }
+                
+                ";
+
+
+        ?>
 
         h1 a, h1 a:link, h1 a:hover, h1 a:visited {
             color: white;
@@ -53,7 +100,6 @@ if (isset($_GET['logout'])) {
 
         .navbar {
             margin: 0;
-            background: rgba(0, 0, 0, 0.5);
             border: none;
             border-radius: 0;
         }
@@ -139,9 +185,9 @@ if (isset($_GET['logout'])) {
                     </button>
                     <ul class="dropdown-menu">
                         <!--<li style=""><a href="#"><i class="glyphicon glyphicon-user"></i> My Profile</a></li>-->
-                        <?php if(isset($_SESSION['rest'])) { ?>
+                        <?php if (isset($_SESSION['rest'])) { ?>
                             <li>
-                                <a href="admin.php?res_id=<?php echo $_SESSION['rest']?>">
+                                <a href="admin.php?res_id=<?php echo $_SESSION['rest'] ?>">
                                     <i class="glyphicon glyphicon-cutlery"></i> My Restaurant
                                 </a>
                             </li>
@@ -163,7 +209,7 @@ if (isset($_GET['logout'])) {
     </div>
 </nav>
 
-<div class="container-fluid text-center" style="background: rgba(0,0,0,0.5)">
+<div class="container-fluid text-center main-container">
 
     <h1 id="heading"><a href=""><i class="glyphicon glyphicon-cutlery"></i> Restro</a></h1>
 
@@ -252,6 +298,60 @@ if (isset($_GET['logout'])) {
     </div>
 
 </div>
+<?php
+
+if (isset($_SESSION['dob'])) {
+
+    if (date("m-d", strtotime($_SESSION['dob'])) == date("m-d")) {
+
+        echo '
+            <div class="modal fade" id="happy-birthday">
+            	<div class="modal-dialog modal-sm">
+            		<div class="modal-content">
+            			<div class="modal-header">
+            				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            				<h4 class="modal-title">Happy Birthday, ' . $_SESSION['name'] . '!</h4>
+            			</div>
+            			<div class="modal-body">
+            				<img src="icons/db.png" class="img-responsive center-block" alt="Happy Birthday">
+            				Treat from our side.<br>
+            				Get <b>10% Discount</b> on your bill.
+            				<audio id="happy-birthday-audio">
+            				    <source src="birthday.mp3" type="audio/mp3">
+            				</audio>
+            			</div>
+            		</div><!-- /.modal-content -->
+            	</div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <script>
+            
+                var audio = document.getElementById("happy-birthday-audio");
+                
+                //audio.currentTime = 30;
+                              
+                $("#happy-birthday").on("shown.bs.modal", function (e) {
+                        audio.play();
+                     
+                });
+                
+                $("#happy-birthday").on("hidden.bs.modal", function (e) {
+                     audio.pause(); 
+                     //audio.currentTime = 30;
+                });
+                
+                $("#happy-birthday").modal("show");
+            
+            </script>
+                        
+            ';
+
+    }
+
+}
+
+
+?>
+
 
 <?php
 
@@ -299,7 +399,8 @@ if (!isset($_SESSION['id'])) { ?>
                                 <br>
                                 <div class="clearfix">
 
-                                    <button type="submit" class="btn btn-success pull-right form-control">Log In</button>
+                                    <button type="submit" class="btn btn-success pull-right form-control">Log In
+                                    </button>
 
                                 </div>
 
@@ -324,6 +425,14 @@ if (!isset($_SESSION['id'])) { ?>
                                     <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
                                     <input required id="s-email" name="email" type="email" class="form-control"
                                            placeholder="Email">
+
+                                </div>
+                                <br>
+                                <div class="input-group">
+
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                    <input required id="dob" name="dob" type="date" class="form-control"
+                                           placeholder="Date of Birth">
 
                                 </div>
                                 <br>

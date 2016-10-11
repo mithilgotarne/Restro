@@ -21,6 +21,7 @@ if ($result = mysqli_query($link, $query)) {
             $_SESSION['name'] = $row['name'];
             $_SESSION['email'] = $row['email'];
             $_SESSION['type'] = $row['type'];
+            $_SESSION['dob'] = $row['dob'];
             if (isset($row['rest']))
                 $_SESSION['rest'] = $row['rest'];
         } else echo '<div class="alert alert-info alert-dismissible fade in" role="alert" style="margin-top: 20px">
